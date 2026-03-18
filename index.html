@@ -57,8 +57,9 @@
     .tab.active{display:flex;flex-direction:column}
 
     /* ── Counter Tab ────────────────────── */
-    #tab-counter{align-items:center;justify-content:center;gap:0;
-      padding:12px 20px calc(var(--safe-b) + 12px)}
+    #tab-counter{align-items:center;justify-content:flex-start;gap:0;
+      padding:20px 20px calc(var(--safe-b) + 20px)}
+    #tab-counter.centered{justify-content:center}
 
     /* dhikr text block — only visible in session */
     .dhikr-block{
@@ -667,6 +668,13 @@ function startSession(type) {
   goTab('counter');
 }
 
+const tabCounter = document.getElementById('tab-counter');
+function updateCentering() {
+  // In session mode content can be tall — don't center, let it scroll from top.
+  // In free mode content is short — center it.
+  tabCounter.classList.toggle('centered', !sess.active);
+}
+
 function loadSessionStep() {
   const dhikr = ADHKAR[sess.type][sess.step];
   goal  = dhikr.count;
@@ -688,6 +696,8 @@ function loadSessionStep() {
   ringWrap.classList.add('small');
   freeCtrl.classList.add('hidden');
   sessCtrl.classList.add('visible');
+  updateCentering();
+  tabCounter.scrollTop = 0;
 
   document.getElementById('sessionProgress').textContent =
     dhikr.title + (dhikr.count > 1 ? '  ×' + dhikr.count : '');
@@ -712,6 +722,7 @@ function endSession() {
   ringWrap.classList.remove('small');
   freeCtrl.classList.remove('hidden');
   sessCtrl.classList.remove('visible');
+  updateCentering();
   goal = 33;
   count = 0;
   ringFill.classList.remove('done');
@@ -816,6 +827,7 @@ async function installApp() {
 // ═══════════════════════════════════════════════════
 draw();
 renderAdhkarLists();
+updateCentering();
 wl();
 </script>
 </body>

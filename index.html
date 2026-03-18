@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Scheherazade+New:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
@@ -243,6 +244,146 @@
     .nav-lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
 
     ::-webkit-scrollbar{width:0}
+
+    /* ── Duas Tab ───────────────────────── */
+    #tab-duas{padding:0}
+
+    .duas-search-wrap{
+      flex-shrink:0;
+      padding:14px 16px 12px;
+      background:var(--hdr-bg);
+      border-bottom:1px solid var(--border);
+      transition:background .3s;
+    }
+
+    .duas-search-row{
+      display:flex;align-items:center;gap:10px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:0 14px;
+      transition:border-color .2s;
+    }
+    .duas-search-row:focus-within{border-color:var(--gold-dim)}
+
+    .duas-search-icon{font-size:16px;color:var(--text-muted);flex-shrink:0}
+
+    .duas-search-input{
+      flex:1;
+      padding:12px 0;
+      background:none;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-family:'Lato',sans-serif;
+      font-size:15px;
+      font-weight:300;
+    }
+    .duas-search-input::placeholder{color:var(--text-muted)}
+    .duas-search-clear{
+      background:none;border:none;cursor:pointer;
+      color:var(--text-muted);font-size:18px;padding:4px;
+      line-height:1;display:none;
+    }
+    .duas-search-clear.visible{display:block}
+
+    .duas-hint{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:11px;color:var(--text-muted);
+      margin-top:8px;padding-left:2px;
+      letter-spacing:.02em;
+    }
+
+    .duas-results{
+      flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      padding:14px 16px calc(var(--safe-b) + 14px);
+      display:flex;flex-direction:column;gap:12px;
+    }
+
+    .dua-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      transition:border-color .2s;
+    }
+
+    .dua-card-head{
+      display:flex;align-items:flex-start;
+      justify-content:space-between;gap:10px;
+      margin-bottom:12px;
+    }
+
+    .dua-card-title{
+      font-size:13px;letter-spacing:.06em;
+      color:var(--gold);flex:1;
+    }
+
+    .dua-card-badge{
+      font-family:'Lato',sans-serif;font-size:10px;font-weight:400;
+      color:var(--text-muted);
+      background:var(--surface2);
+      border:1px solid var(--border);
+      padding:3px 8px;border-radius:8px;
+      flex-shrink:0;white-space:nowrap;
+    }
+    .dua-card-badge.quran{color:var(--green-bright);border-color:rgba(82,183,136,.25);background:rgba(82,183,136,.07)}
+
+    .dua-card-arabic{
+      font-family:'Scheherazade New',serif;
+      font-size:clamp(19px,5.5vw,26px);
+      line-height:2.1;direction:rtl;
+      color:var(--text);
+      margin-bottom:12px;
+      padding-bottom:12px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .dua-card-translation{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:13px;color:var(--text-sub);
+      line-height:1.7;font-style:italic;
+      margin-bottom:8px;
+    }
+
+    .dua-card-source{
+      font-family:'Lato',sans-serif;font-size:10.5px;
+      color:var(--text-muted);letter-spacing:.03em;
+    }
+
+    .duas-empty{
+      flex:1;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:12px;padding:40px 24px;text-align:center;
+    }
+    .duas-empty-icon{font-size:36px;opacity:.3}
+    .duas-empty-text{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:14px;color:var(--text-muted);line-height:1.7;
+    }
+
+    .duas-landing{
+      flex:1;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:14px;padding:32px 24px;text-align:center;
+    }
+    .duas-landing-icon{
+      font-family:'Scheherazade New',serif;
+      font-size:48px;color:var(--gold);opacity:.4;
+    }
+    .duas-landing-title{font-size:14px;letter-spacing:.1em;color:var(--text-sub)}
+    .duas-landing-hint{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:12.5px;color:var(--text-muted);line-height:1.8;max-width:270px;
+    }
+    .duas-suggestions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
+    .duas-chip{
+      font-family:'Lato',sans-serif;font-size:12px;font-weight:300;
+      padding:6px 13px;border-radius:16px;
+      background:var(--surface);border:1px solid var(--border);
+      color:var(--text-sub);cursor:pointer;transition:all .18s;
+    }
+    .duas-chip:active{border-color:var(--gold-dim);color:var(--gold)}
   </style>
 </head>
 <body>
@@ -347,6 +488,44 @@
 
   </section>
 
+  <!-- ══════════ DUAS TAB ══════════ -->
+  <section class="tab" id="tab-duas">
+
+    <div class="duas-search-wrap">
+      <div class="duas-search-row">
+        <span class="duas-search-icon">&#x1F50D;</span>
+        <input class="duas-search-input" id="duasInput" type="text"
+               placeholder="e.g. duas for sadness, anxiety, illness…"
+               oninput="onDuaSearch(this.value)"
+               autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="duas-search-clear" id="duasClear" onclick="clearDuaSearch()">&#x2715;</button>
+      </div>
+      <div class="duas-hint">Searches across meaning, situation &amp; Arabic terms &middot; <span id="duasCount"></span></div>
+    </div>
+
+    <div class="duas-results" id="duasResults">
+      <!-- landing state -->
+      <div class="duas-landing" id="duasLanding">
+        <div class="duas-landing-icon">&#x62F;&#x639;&#x627;&#x621;</div>
+        <div class="duas-landing-title">Authentic Du'ā Library</div>
+        <div class="duas-landing-hint">All duas are from the Qur'ān or Ṣaḥīḥ ḥadīth only.<br>Type anything to search.</div>
+        <div class="duas-suggestions">
+          <button class="duas-chip" onclick="chipSearch('sadness')">sadness</button>
+          <button class="duas-chip" onclick="chipSearch('forgiveness')">forgiveness</button>
+          <button class="duas-chip" onclick="chipSearch('anxiety')">anxiety</button>
+          <button class="duas-chip" onclick="chipSearch('illness')">illness</button>
+          <button class="duas-chip" onclick="chipSearch('guidance')">guidance</button>
+          <button class="duas-chip" onclick="chipSearch('parents')">parents</button>
+          <button class="duas-chip" onclick="chipSearch('debt')">debt</button>
+          <button class="duas-chip" onclick="chipSearch('knowledge')">knowledge</button>
+          <button class="duas-chip" onclick="chipSearch('patience')">patience</button>
+          <button class="duas-chip" onclick="chipSearch('children')">children</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
   <!-- ── Nav ── -->
   <nav class="nav">
     <button class="nav-btn active" data-tab="counter" onclick="goTab('counter')">
@@ -356,6 +535,10 @@
     <button class="nav-btn" data-tab="adhkar" onclick="goTab('adhkar')">
       <span class="nav-icon">&#x263E;</span>
       <span class="nav-lbl">Adhkar</span>
+    </button>
+    <button class="nav-btn" data-tab="duas" onclick="goTab('duas')">
+      <span class="nav-icon">&#x1F91F;</span>
+      <span class="nav-lbl">Du&#x2019;ā</span>
     </button>
   </nav>
 
@@ -823,8 +1006,341 @@ async function installApp() {
 }
 
 // ═══════════════════════════════════════════════════
-//  INIT
+//  DU'Ā LIBRARY  (Qur'ān & Ṣaḥīḥ ḥadīth only)
 // ═══════════════════════════════════════════════════
+const DUAS = [
+  {
+    title: "Du'ā of Yūnus — Relief from Distress",
+    arabic: "لَآ إِلٰهَ إِلَّآ أَنْتَ سُبْحٰنَكَ إِنِّيْ كُنْتُ مِنَ الظّٰلِمِيْنَ",
+    translation: "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.",
+    source: "Qur'ān 21:87 · Tirmidhī 3500 (authenticated)",
+    type: "quran",
+    tags: ["distress","crisis","trapped","desperate","hopeless","overwhelmed","yūnus","yunus","whale","darkness","dua yunos","relief","rescue","calamity","hardship","grief","sadness","depression","stuck","no way out","trial","tribulation","wrongdoing","repentance","tawbah","plea"]
+  },
+  {
+    title: "Du'ā of Ayyūb — Illness & Suffering",
+    arabic: "رَبِّ إِنِّيْ مَسَّنِيَ الضُّرُّ وَأَنْتَ أَرْحَمُ الرّٰحِمِيْنَ",
+    translation: "My Lord, adversity has touched me, and You are the Most Merciful of the merciful.",
+    source: "Qur'ān 21:83",
+    type: "quran",
+    tags: ["illness","sick","sickness","disease","pain","suffering","hardship","affliction","ayyub","job","patience","sabr","mercy","healing","shifa","chronic","disability","weakness","physical","test","trial","distress","grief","sadness","difficult","long trial"]
+  },
+  {
+    title: "Du'ā of Mūsā — Need & Provision",
+    arabic: "رَبِّ إِنِّيْ لِمَآ أَنْزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيْرٌ",
+    translation: "My Lord, indeed I am in need of whatever good You would send down to me.",
+    source: "Qur'ān 28:24",
+    type: "quran",
+    tags: ["provision","rizq","need","poor","poverty","broke","money","financial","help","reliance","tawakkul","seeking","asking","dua for need","homeless","desperate","employment","job","sustenance","barakah","blessing","helpless","refugee","stranger","alone"]
+  },
+  {
+    title: "Du'ā for Good in Dunyā & Ākhirah",
+    arabic: "رَبَّنَآ اٰتِنَا فِي الدُّنْيَا حَسَنَةً وَّفِي الْاٰخِرَةِ حَسَنَةً وَّقِنَا عَذَابَ النَّارِ",
+    translation: "Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.",
+    source: "Qur'ān 2:201 · Bukhārī 6389 · Muslim 2690",
+    type: "quran",
+    tags: ["comprehensive","general","dunya","akhira","hereafter","hellfire","protection","good life","well being","blessing","happiness","success","balance","world","afterlife","paradise","jannah","best","complete","all needs","short dua","everyday","daily","most recited"]
+  },
+  {
+    title: "Du'ā for a Steadfast Heart",
+    arabic: "رَبَّنَا لَا تُزِغْ قُلُوْبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَّدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ",
+    translation: "Our Lord, let not our hearts deviate after You have guided us and grant us from Yourself mercy. Indeed, You are the Bestower.",
+    source: "Qur'ān 3:8",
+    type: "quran",
+    tags: ["heart","guidance","steadfast","firm","deviate","go astray","lost","faith","iman","doubt","waswas","whispers","mercy","istiqamah","consistency","staying guided","fear of losing faith","leaving islam","losing way","confused","misguided","steadfastness","qalb"]
+  },
+  {
+    title: "Du'ā of Mūsā — Ease & Clarity",
+    arabic: "رَبِّ اشْرَحْ لِيْ صَدْرِيْ وَيَسِّرْ لِيْ أَمْرِيْ وَاحْلُلْ عُقْدَةً مِّنْ لِّسَانِيْ يَفْقَهُوْا قَوْلِيْ",
+    translation: "My Lord, expand for me my chest, ease for me my task, and untie the knot from my tongue so they may understand my speech.",
+    source: "Qur'ān 20:25–28",
+    type: "quran",
+    tags: ["ease","anxiety","chest tight","difficult task","public speaking","speech","presentation","exam","test","interview","communication","stress","pressure","worry","nervous","difficult","task","work","assignment","clarity","eloquence","confidence","before important event","tightness","overwhelmed"]
+  },
+  {
+    title: "Du'ā for Knowledge",
+    arabic: "رَبِّ زِدْنِيْ عِلْمًا",
+    translation: "My Lord, increase me in knowledge.",
+    source: "Qur'ān 20:114",
+    type: "quran",
+    tags: ["knowledge","ilm","learning","studying","student","exam","school","university","education","understanding","wisdom","hikmah","increase","seeking knowledge","memory","comprehension","revision","research","reading","memorize","quran memorization","short","simple","powerful"]
+  },
+  {
+    title: "Du'ā for Righteous Family & Children",
+    arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيّٰتِنَا قُرَّةَ أَعْيُنٍ وَّاجْعَلْنَا لِلْمُتَّقِيْنَ إِمَامًا",
+    translation: "Our Lord, grant us from among our spouses and offspring comfort to our eyes, and make us a leader for the righteous.",
+    source: "Qur'ān 25:74",
+    type: "quran",
+    tags: ["family","children","kids","spouse","wife","husband","marriage","offspring","righteous","taqwa","pious","children","parenting","comfort","joy","offspring","dzuriyya","lineage","leadership","happy family","raising children","good children","home","household"]
+  },
+  {
+    title: "Du'ā for Gratitude & Righteous Deeds",
+    arabic: "رَبِّ اَوْزِعْنِيْ أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِيْ أَنْعَمْتَ عَلَيَّ وَعَلٰى وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضٰهُ وَأَصْلِحْ لِيْ فِيْ ذُرِّيَّتِيْ",
+    translation: "My Lord, enable me to be grateful for Your favour which You have bestowed upon me and upon my parents, and to do righteousness of which You approve, and make righteous for me my offspring.",
+    source: "Qur'ān 46:15",
+    type: "quran",
+    tags: ["gratitude","shukr","thankful","parents","mother","father","blessings","ni'mah","righteous deeds","amal salih","children","offspring","turning 40","maturity","appreciating","thankfulness","worship","obedience","parenthood","inheritance","generation"]
+  },
+  {
+    title: "Du'ā for Forgiveness of Self & Parents",
+    arabic: "رَبَّنَا اغْفِرْ لِيْ وَلِوَالِدَيَّ وَلِلْمُؤْمِنِيْنَ يَوْمَ يَقُوْمُ الْحِسَابُ",
+    translation: "Our Lord, forgive me and my parents and the believers on the Day the account is established.",
+    source: "Qur'ān 14:41",
+    type: "quran",
+    tags: ["forgiveness","parents","mother","father","magfirah","deceased parents","dead","passed away","akhira","hereafter","judgment day","believers","dua for parents","maghfirah","nafila","after death","mercy","intercession","sins","family"]
+  },
+  {
+    title: "Du'ā for Patience & Steadfastness",
+    arabic: "رَبَّنَآ أَفْرِغْ عَلَيْنَا صَبْرًا وَّتَوَفَّنَا مُسْلِمِيْنَ",
+    translation: "Our Lord, pour upon us patience and let us die as Muslims.",
+    source: "Qur'ān 7:126",
+    type: "quran",
+    tags: ["patience","sabr","steadfastness","dying as muslim","death","hardship","persecution","difficulty","trial","oppression","crisis","good death","husn al-khatimah","end of life","perseverance","endurance","strength","sustain","keep going","bearing","difficult time"]
+  },
+  {
+    title: "Du'ā for Forgiveness & Mercy",
+    arabic: "رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرّٰحِمِيْنَ",
+    translation: "My Lord, forgive and have mercy, and You are the best of the merciful.",
+    source: "Qur'ān 23:118",
+    type: "quran",
+    tags: ["forgiveness","mercy","short","simple","powerful","maghfirah","rahma","sins","repentance","tawbah","concise","daily","feeling guilty","shame","regret","remorse","mistakes","wrongdoing","sin","asking forgiveness"]
+  },
+  {
+    title: "Du'ā of Ādam — Repentance",
+    arabic: "رَبَّنَا ظَلَمْنَآ أَنْفُسَنَا وَإِنْ لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُوْنَنَّ مِنَ الْخٰسِرِيْنَ",
+    translation: "Our Lord, we have wronged ourselves, and if You do not forgive us and have mercy upon us, we will surely be among the losers.",
+    source: "Qur'ān 7:23",
+    type: "quran",
+    tags: ["repentance","tawbah","adam","eve","forgiveness","sin","wrong","guilt","shame","regret","remorse","return to allah","mercy","wronged","mistakes","sinful","fallen short","feel bad","ashamed","lost","need forgiveness","deep regret"]
+  },
+  {
+    title: "Du'ā — Reliance on Allāh",
+    arabic: "حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيْلُ",
+    translation: "Allah is sufficient for us, and He is the best Disposer of affairs.",
+    source: "Qur'ān 3:173 · Bukhārī 4563",
+    type: "quran",
+    tags: ["reliance","tawakkul","trust","hasbunallah","fear","stress","short","powerful","anxiety","worried","overwhelmed","threatened","trust allah","leave it to allah","sufficient","enough","facing enemy","oppression","don't know what to do","desperate","crisis"]
+  },
+  {
+    title: "Du'ā — Do Not Hold Us Accountable for Forgetting",
+    arabic: "رَبَّنَا لَا تُؤَاخِذْنَآ إِنْ نَّسِيْنَآ أَوْ أَخْطَأْنَا",
+    translation: "Our Lord, do not impose blame upon us if we have forgotten or erred.",
+    source: "Qur'ān 2:286",
+    type: "quran",
+    tags: ["forgiveness","mistakes","forgetfulness","error","accident","unintentional","mercy","ease","burden","accountability","sins of omission","forgot","slipped","human error","not meaning to","weak","negligence","oversight","short","concise"]
+  },
+  {
+    title: "Du'ā Against Grief & Anxiety",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ",
+    translation: "O Allah, I seek refuge in You from anxiety and grief, from weakness and laziness, from miserliness and cowardice, and from the burden of debt and the overpowering of men.",
+    source: "Bukhārī 6369",
+    type: "hadith",
+    tags: ["anxiety","worry","stress","grief","sadness","depression","sadness","distress","hamm","huzn","laziness","weakness","debt","cowardice","fear","mental health","negative feelings","dark thoughts","low","feeling down","overwhelmed","burden","financial","men overpowering","oppression"]
+  },
+  {
+    title: "Du'ā of Distress — Allāh's Servant",
+    arabic: "اَللّٰهُمَّ إِنِّيْ عَبْدُكَ، ابْنُ عَبْدِكَ، ابْنُ أَمَتِكَ، نَاصِيَتِيْ بِيَدِكَ، مَاضٍ فِيَّ حُكْمُكَ، عَدْلٌ فِيَّ قَضَاؤُكَ، أَسْأَلُكَ بِكُلِّ اسْمٍ هُوَ لَكَ، سَمَّيْتَ بِهِ نَفْسَكَ، أَوْ أَنْزَلْتَهُ فِيْ كِتَابِكَ، أَوْ عَلَّمْتَهُ أَحَدًا مِّنْ خَلْقِكَ، أَوِ اسْتَأْثَرْتَ بِهِ فِيْ عِلْمِ الْغَيْبِ عِنْدَكَ، أَنْ تَجْعَلَ الْقُرْاٰنَ رَبِيْعَ قَلْبِيْ، وَنُوْرَ صَدْرِيْ، وَجَلَاءَ حُزْنِيْ، وَذَهَابَ هَمِّيْ",
+    translation: "O Allah, I am Your servant, son of Your servant, son of Your maidservant. My forelock is in Your hand, Your command over me is forever executed, and Your decree over me is just. I ask You by every name belonging to You which You have named Yourself, or revealed in Your Book, or taught any of Your creation, or have preserved in the knowledge of the unseen — that You make the Qur'ān the spring of my heart, and the light of my chest, and a departure for my grief, and a relief for my anxiety.",
+    source: "Aḥmad 3712 · Silsilah al-Ṣaḥīḥah 199",
+    type: "hadith",
+    tags: ["grief","sadness","depression","anxiety","distress","heartbreak","quran cure","spring of heart","light","darkness","despair","deep sadness","hopeless","lost","sorrow","huzn","hamm","heavy heart","overwhelmed","emotional pain","mental","healing soul","powerful","beautiful","names of allah"]
+  },
+  {
+    title: "Du'ā for All Affairs",
+    arabic: "اَللّٰهُمَّ أَصْلِحْ لِيْ دِيْنِيَ الَّذِيْ هُوَ عِصْمَةُ أَمْرِيْ، وَأَصْلِحْ لِيْ دُنْيَايَ الَّتِيْ فِيْهَا مَعَاشِيْ، وَأَصْلِحْ لِيْ اٰخِرَتِيْ الَّتِيْ فِيْهَا مَعَادِيْ، وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِّيْ فِيْ كُلِّ خَيْرٍ، وَاجْعَلِ الْمَوْتَ رَاحَةً لِّيْ مِنْ كُلِّ شَرٍّ",
+    translation: "O Allah, set right for me my religion which is the safeguard of my affairs, and set right for me my worldly life in which is my livelihood, and set right for me my Hereafter in which is my return, and make life for me an increase in every good, and make death a relief for me from every evil.",
+    source: "Muslim 2720",
+    type: "hadith",
+    tags: ["comprehensive","all affairs","deen","dunya","akhira","religion","worldly life","hereafter","good death","livelihood","balanced","complete","life and death","fix my affairs","all areas","comprehensive dua","general","powerful","daily","holistic","protect religion","protect livelihood"]
+  },
+  {
+    title: "Du'ā for Guidance, Piety & Sufficiency",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ الْهُدٰى وَالتُّقٰى وَالْعَفَافَ وَالْغِنٰى",
+    translation: "O Allah, I ask You for guidance, piety, chastity, and sufficiency.",
+    source: "Muslim 2721",
+    type: "hadith",
+    tags: ["guidance","hidayah","taqwa","piety","chastity","iffah","sufficiency","contentment","ghina","self restraint","modest","not needing people","independence","pure","staying guided","simple","short","powerful","four things","protection from sin","financial contentment"]
+  },
+  {
+    title: "Du'ā for Soul Purification",
+    arabic: "اَللّٰهُمَّ اٰتِ نَفْسِيْ تَقْوٰهَا وَزَكِّهَا أَنْتَ خَيْرُ مَنْ زَكّٰهَا أَنْتَ وَلِيُّهَا وَمَوْلٰهَا",
+    translation: "O Allah, grant my soul its righteousness, and purify it — You are the best of those who purify it, You are its Guardian and Master.",
+    source: "Muslim 2722",
+    type: "hadith",
+    tags: ["soul","nafs","taqwa","purification","tazkiyah","purity","righteousness","spiritual cleansing","self improvement","inner","character","akhlaq","sinful","feeling impure","internal","heart","spiritual growth","become better","reform","rectify soul","self purification","guardian","master"]
+  },
+  {
+    title: "Du'ā for Protection from Weakness & Debt",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَالْجُبْنِ وَالْهَرَمِ وَالْبُخْلِ وَأَعُوْذُ بِكَ مِنْ عَذَابِ الْقَبْرِ وَمِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ",
+    translation: "O Allah, I seek refuge in You from weakness, laziness, cowardice, old age, and miserliness; and I seek refuge in You from the punishment of the grave and the trials of life and death.",
+    source: "Bukhārī 6367 · Muslim 2706",
+    type: "hadith",
+    tags: ["weakness","laziness","kasal","procrastination","cowardice","debt","miserliness","old age","grave","punishment","trials","fitna","life trials","death","protection","motivation","getting things done","discipline","fear of failure","lacking drive","no energy","unmotivated"]
+  },
+  {
+    title: "Du'ā for Healing",
+    arabic: "اَللّٰهُمَّ رَبَّ النَّاسِ أَذْهِبِ الْبَأْسَ وَاشْفِ أَنْتَ الشَّافِيْ لَا شِفَاءَ إِلَّا شِفَاؤُكَ شِفَاءً لَّا يُغَادِرُ سَقَمًا",
+    translation: "O Allah, Lord of mankind, remove the affliction and grant cure. You are the Healer; there is no cure except Your cure — a cure that leaves no illness behind.",
+    source: "Bukhārī 5675 · Muslim 2191",
+    type: "hadith",
+    tags: ["healing","shifa","illness","sick","disease","cure","recovery","hospital","medicine","doctor","pain","suffering","chronic illness","cancer","surgery","ruqyah","seeking cure","for sick person","get well","health","physical pain","mental illness","dua for sick","recite over sick"]
+  },
+  {
+    title: "Du'ā for Beneficial Knowledge",
+    arabic: "اَللّٰهُمَّ انْفَعْنِيْ بِمَا عَلَّمْتَنِيْ وَعَلِّمْنِيْ مَا يَنْفَعُنِيْ وَزِدْنِيْ عِلْمًا",
+    translation: "O Allah, make what You have taught me beneficial, and teach me what will benefit me, and increase me in knowledge.",
+    source: "Ibn Mājah 251 · Tirmidhī 3599 (authenticated by al-Albānī)",
+    type: "hadith",
+    tags: ["knowledge","beneficial knowledge","ilm nafi","learning","studying","student","exam","useful knowledge","education","understanding","wisdom","teach me","increase knowledge","memorization","quran","arabic","useful","practical","seeking knowledge","school","university","revision"]
+  },
+  {
+    title: "Du'ā of Istikhārah — Seeking Guidance in Decisions",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَسْتَخِيْرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيْمِ فَإِنَّكَ تَقْدِرُ وَلَا أَقْدِرُ وَتَعْلَمُ وَلَا أَعْلَمُ وَأَنْتَ عَلَّامُ الْغُيُوْبِ ۔ اَللّٰهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ خَيْرٌ لِّيْ فِيْ دِيْنِيْ وَمَعَاشِيْ وَعَاقِبَةِ أَمْرِيْ فَاقْدُرْهُ لِيْ وَيَسِّرْهُ لِيْ ثُمَّ بَارِكْ لِيْ فِيْهِ ۔ وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هٰذَا الْأَمْرَ شَرٌّ لِّيْ فِيْ دِيْنِيْ وَمَعَاشِيْ وَعَاقِبَةِ أَمْرِيْ فَاصْرِفْهُ عَنِّيْ وَاصْرِفْنِيْ عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِيْ بِهِ",
+    translation: "O Allah, I seek Your guidance by Your knowledge, I seek ability by Your power, and I ask You of Your great bounty — for You have power and I have none, You know and I do not know, and You are the Knower of all unseen things. O Allah, if You know that this matter is good for me in my religion, livelihood and my affairs — then ordain it for me and make it easy for me, then bless me in it. And if You know that this matter is bad for me in my religion, livelihood and my affairs — then turn it away from me and turn me away from it, and ordain for me what is good wherever it may be, and make me content with it.",
+    source: "Bukhārī 1166",
+    type: "hadith",
+    tags: ["istikhara","decision","choice","guidance","important decision","marriage proposal","job offer","moving","unsure","confused","which option","help me choose","major decision","career","life choice","seeking advice from allah","seeking good","contentment","rida","before deciding","dilemma"]
+  },
+  {
+    title: "Du'ā for Relief from Debt",
+    arabic: "اَللّٰهُمَّ اكْفِنِيْ بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِيْ بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    translation: "O Allah, suffice me with what You have made lawful, sparing me from what You have made unlawful, and make me self-sufficient with Your bounty, independent of all others besides You.",
+    source: "Tirmidhī 3563 (authenticated by al-Albānī)",
+    type: "hadith",
+    tags: ["debt","financial","money","broke","poverty","loan","burden","relief","provision","rizq","halal","independence","sufficiency","self sufficient","not needing people","don't want to beg","financial worry","bills","can't pay","salary","income","wealth","barakah in money","lawful"]
+  },
+  {
+    title: "Du'ā for Protection of Children",
+    arabic: "أُعِيْذُكُمَا بِكَلِمَاتِ اللّٰهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ وَمِنْ كُلِّ عَيْنٍ لَّامَّةٍ",
+    translation: "I seek protection for you both in the perfect words of Allah, from every devil and every poisonous creature, and from every evil eye.",
+    source: "Bukhārī 3371",
+    type: "hadith",
+    tags: ["children","protection","evil eye","ayn","hasad","envy","child","baby","newborn","toddler","kid","ruqyah","shaytan","devil","harm","jinni","parent","safeguard","blessing child","hasad","jealousy","nazar","protect family","sons daughters","ibrahim ismail"]
+  },
+  {
+    title: "Du'ā for Good Character & Conduct",
+    arabic: "اَللّٰهُمَّ كَمَا أَحْسَنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ",
+    translation: "O Allah, just as You have made my physical form good, so too make my character good.",
+    source: "Aḥmad 3823 · Ibn Ḥibbān 959 (authenticated)",
+    type: "hadith",
+    tags: ["character","akhlaq","good manners","conduct","behaviour","anger","short temper","patience","self control","improve myself","be better person","moral","ethics","rude","unkind","harsh","reform","attitude","dealing with people","relationships","kind","gentle","beautiful character","become good","mirror dua"]
+  },
+  {
+    title: "Du'ā Upon Entering the Home",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ خَيْرَ الْمَوْلَجِ وَخَيْرَ الْمَخْرَجِ بِسْمِ اللّٰهِ وَلَجْنَا وَبِسْمِ اللّٰهِ خَرَجْنَا وَعَلَى اللّٰهِ رَبِّنَا تَوَكَّلْنَا",
+    translation: "O Allah, I ask You for the good of entering and the good of leaving. In the name of Allah we enter, in the name of Allah we leave, and upon Allah our Lord we place our trust.",
+    source: "Abū Dāwūd 5096 (authenticated by al-Albānī)",
+    type: "hadith",
+    tags: ["entering home","leaving home","home","house","protection","tawakkul","bismillah","daily","safety","travel","going out","coming back","beginning","daily routine","new home","moving in","blessing home","shaytan","protection from shaytan","household"]
+  },
+  {
+    title: "Du'ā of Yā Ḥayyu Yā Qayyūm",
+    arabic: "يَا حَيُّ يَا قَيُّوْمُ بِرَحْمَتِكَ أَسْتَغِيْثُ أَصْلِحْ لِيْ شَأْنِيْ كُلَّهٗ وَلَا تَكِلْنِيْ إِلٰى نَفْسِيْ طَرْفَةَ عَيْنٍ",
+    translation: "O Ever-Living, O Self-Sustaining Sustainer, in Your mercy I seek relief. Rectify for me all of my affairs and do not leave me to myself even for the blink of an eye.",
+    source: "al-Ḥākim · Ṣaḥīḥ al-Targhīb 661 · al-Ṣaḥīḥah 227",
+    type: "hadith",
+    tags: ["distress","relief","all affairs","ya hayyu ya qayyum","names of allah","morning","evening","help","desperate","can't manage","overwhelmed","all needs","rectify","fix","self reliance","blink of eye","constant help","always need allah","general","beautiful","powerful","comprehensive","lost"]
+  },
+  {
+    title: "Du'ā for Protection from Trials of Life & Death",
+    arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ وَمِنْ عَذَابِ الْقَبْرِ وَفِتْنَةِ الْمَسِيْحِ الدَّجَّالِ",
+    translation: "O Allah, I seek refuge in You from the trials of life and death, from the punishment of the grave, and from the trial of the False Messiah.",
+    source: "Bukhārī 1377 · Muslim 588",
+    type: "hadith",
+    tags: ["trials","fitna","dajjal","false messiah","end times","grave","death","life","protection","last days","fear of death","dying","afterlife","punishment of grave","azab al-qabr","major signs","trial","test","hardship","world fitna","social fitna","loss of faith","protection"]
+  }
+];
+
+// ═══════════════════════════════════════════════════
+//  FUSE SEARCH SETUP
+// ═══════════════════════════════════════════════════
+const fuse = new Fuse(DUAS, {
+  keys: [
+    { name: 'title',       weight: 0.25 },
+    { name: 'tags',        weight: 0.45 },
+    { name: 'translation', weight: 0.25 },
+    { name: 'source',      weight: 0.05 },
+  ],
+  threshold:        0.38,
+  includeScore:     true,
+  ignoreLocation:   true,
+  minMatchCharLength: 2,
+});
+
+document.getElementById('duasCount').textContent = DUAS.length + ' duas';
+
+function onDuaSearch(q) {
+  const clear = document.getElementById('duasClear');
+  clear.classList.toggle('visible', q.length > 0);
+  if (!q.trim()) { showDuasLanding(); return; }
+  const results = fuse.search(q.trim()).map(r => r.item);
+  renderDuas(results, q.trim());
+}
+
+function clearDuaSearch() {
+  const inp = document.getElementById('duasInput');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('duasClear').classList.remove('visible');
+  showDuasLanding();
+}
+
+function chipSearch(term) {
+  const inp = document.getElementById('duasInput');
+  inp.value = term;
+  document.getElementById('duasClear').classList.add('visible');
+  const results = fuse.search(term).map(r => r.item);
+  renderDuas(results, term);
+}
+
+function showDuasLanding() {
+  const el = document.getElementById('duasResults');
+  el.innerHTML = `
+    <div class="duas-landing" id="duasLanding">
+      <div class="duas-landing-icon">&#x62F;&#x639;&#x627;&#x621;</div>
+      <div class="duas-landing-title">Authentic Du&#x2019;&#x101; Library</div>
+      <div class="duas-landing-hint">All du&#x2019;&#x101;s are from the Qur&#x2019;&#x101;n or Ṣa&#x1E25;&#x12B;&#x1E25; &#x1E25;ad&#x12B;th only.<br>Type anything to search.</div>
+      <div class="duas-suggestions">
+        <button class="duas-chip" onclick="chipSearch('sadness')">sadness</button>
+        <button class="duas-chip" onclick="chipSearch('forgiveness')">forgiveness</button>
+        <button class="duas-chip" onclick="chipSearch('anxiety')">anxiety</button>
+        <button class="duas-chip" onclick="chipSearch('illness')">illness</button>
+        <button class="duas-chip" onclick="chipSearch('guidance')">guidance</button>
+        <button class="duas-chip" onclick="chipSearch('parents')">parents</button>
+        <button class="duas-chip" onclick="chipSearch('debt')">debt</button>
+        <button class="duas-chip" onclick="chipSearch('knowledge')">knowledge</button>
+        <button class="duas-chip" onclick="chipSearch('patience')">patience</button>
+        <button class="duas-chip" onclick="chipSearch('children')">children</button>
+      </div>
+    </div>`;
+}
+
+function renderDuas(items, query) {
+  const el = document.getElementById('duasResults');
+  if (!items.length) {
+    el.innerHTML = `
+      <div class="duas-empty">
+        <div class="duas-empty-icon">&#x1F50D;</div>
+        <div class="duas-empty-text">No du&#x2019;&#x101;s found for &ldquo;${escHtml(query)}&rdquo;.<br>Try different words — e.g. &ldquo;grief&rdquo;, &ldquo;sick&rdquo;, &ldquo;marriage&rdquo;.</div>
+      </div>`;
+    return;
+  }
+  el.innerHTML = items.map(d => `
+    <div class="dua-card">
+      <div class="dua-card-head">
+        <div class="dua-card-title">${escHtml(d.title)}</div>
+        <div class="dua-card-badge ${d.type === 'quran' ? 'quran' : ''}">${d.type === 'quran' ? 'Qur&#x2019;&#x101;n' : 'Ḥad&#x12B;th'}</div>
+      </div>
+      <div class="dua-card-arabic">${escHtml(d.arabic)}</div>
+      <div class="dua-card-translation">${escHtml(d.translation)}</div>
+      <div class="dua-card-source">${escHtml(d.source)}</div>
+    </div>`).join('');
+  el.scrollTop = 0;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 draw();
 renderAdhkarLists();
 updateCentering();

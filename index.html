@@ -244,7 +244,75 @@
     .nav-icon{font-size:23px;line-height:1}
     .nav-lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
 
+    /* ── Qiblah Tab ─────────────────────── */
+    #tab-qiblah{
+      align-items:center; justify-content:center;
+      padding:20px 24px calc(var(--safe-b) + 20px);
+      gap:28px;
+    }
+
+    .qiblah-compass-wrap{
+      position:relative;
+      width:min(72vw, 300px);
+      height:min(72vw, 300px);
+      flex-shrink:0;
+    }
+
+    /* outer ring — cardinal labels */
+    .qiblah-compass-svg{ width:100%; height:100%; }
+
+    /* needle container rotates as one */
+    .qiblah-needle-wrap{
+      position:absolute; inset:0;
+      transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .qiblah-info{
+      display:flex; flex-direction:column;
+      align-items:center; gap:6px;
+      text-align:center;
+    }
+
+    .qiblah-label{
+      font-size:13px; letter-spacing:.12em;
+      text-transform:uppercase; color:var(--gold);
+    }
+
+    .qiblah-bearing{
+      font-size:clamp(36px,10vw,52px);
+      font-weight:500; color:var(--text); line-height:1;
+    }
+
+    .qiblah-distance{
+      font-family:'Lato',sans-serif; font-weight:300;
+      font-size:13px; color:var(--text-sub);
+    }
+
+    .qiblah-status{
+      font-family:'Lato',sans-serif; font-weight:300;
+      font-size:12px; color:var(--text-muted);
+      text-align:center; max-width:260px; line-height:1.6;
+    }
+
+    .qiblah-btn{
+      padding:12px 28px; border-radius:12px;
+      border:1px solid var(--gold-dim);
+      background:rgba(201,170,82,.08);
+      color:var(--gold);
+      font-family:'Cinzel',serif; font-size:12px;
+      letter-spacing:.1em; cursor:pointer;
+      transition:all .2s;
+    }
+    .qiblah-btn:active{ opacity:.7 }
+
+    .qiblah-calibration{
+      font-family:'Lato',sans-serif; font-weight:300;
+      font-size:11px; color:var(--text-muted);
+      text-align:center; max-width:240px; line-height:1.7;
+    }
+
     ::-webkit-scrollbar{width:0}
+
 
     /* ── Duas Tab ───────────────────────── */
     #tab-duas{padding:0}
@@ -532,6 +600,98 @@
 
   </section>
 
+  <!-- ══════════ QIBLAH TAB ══════════ -->
+  <section class="tab" id="tab-qiblah">
+
+    <!-- Compass -->
+    <div class="qiblah-compass-wrap" id="qiblahCompassWrap">
+      <svg class="qiblah-compass-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="needleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#dfc070"/>
+            <stop offset="100%" stop-color="#c9aa52"/>
+          </linearGradient>
+          <!-- subtle glow filter for kaaba icon -->
+          <filter id="goldGlow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- track ring -->
+        <circle cx="150" cy="150" r="138" fill="none" stroke="var(--track)" stroke-width="2"/>
+        <!-- decorative dashes -->
+        <circle cx="150" cy="150" r="128" fill="none" stroke="var(--border)" stroke-width="1"
+          stroke-dasharray="3 9.05"/>
+
+        <!-- cardinal tick marks -->
+        <g stroke="var(--border2,#2e3648)" stroke-width="1.5">
+          <!-- N -->  <line x1="150" y1="16" x2="150" y2="28"/>
+          <!-- E -->  <line x1="284" y1="150" x2="272" y2="150"/>
+          <!-- S -->  <line x1="150" y1="284" x2="150" y2="272"/>
+          <!-- W -->  <line x1="16" y1="150" x2="28" y2="150"/>
+        </g>
+        <!-- intercardinal ticks (smaller) -->
+        <g stroke="var(--border)" stroke-width="1" opacity="0.7">
+          <line x1="247.5" y1="52.5" x2="240" y2="60"/>
+          <line x1="247.5" y1="247.5" x2="240" y2="240"/>
+          <line x1="52.5" y1="247.5" x2="60" y2="240"/>
+          <line x1="52.5" y1="52.5" x2="60" y2="60"/>
+        </g>
+
+        <!-- cardinal letters -->
+        <g font-family="Cinzel,serif" font-size="14" font-weight="600" fill="var(--text-muted)" text-anchor="middle">
+          <text x="150" y="12">N</text>
+          <text x="291" y="155">E</text>
+          <text x="150" y="298">S</text>
+          <text x="9"   y="155">W</text>
+        </g>
+
+        <!-- centre dot -->
+        <circle cx="150" cy="150" r="5" fill="var(--surface2)" stroke="var(--border2,#2e3648)" stroke-width="1.5"/>
+      </svg>
+
+      <!-- Needle (rotates via JS) -->
+      <div class="qiblah-needle-wrap" id="qiblahNeedle">
+        <svg viewBox="0 0 300 300" style="width:100%;height:100%;position:absolute;inset:0" xmlns="http://www.w3.org/2000/svg">
+          <!-- Qiblah (gold) end — points toward Mecca -->
+          <polygon points="150,30 143,150 157,150"
+            fill="url(#needleGrad)"
+            filter="url(#goldGlow)"/>
+          <!-- Opposite (dim) end -->
+          <polygon points="150,270 143,150 157,150"
+            fill="var(--border2,#2e3648)"/>
+          <!-- Ka'bah icon at tip -->
+          <rect x="143" y="18" width="14" height="14" rx="2"
+            fill="var(--gold)" opacity="0.9" filter="url(#goldGlow)"/>
+          <rect x="146" y="21" width="8" height="8" rx="1"
+            fill="var(--bg)" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bearing + distance -->
+    <div class="qiblah-info" id="qiblahInfo" style="display:none">
+      <div class="qiblah-label">Qiblah Direction</div>
+      <div class="qiblah-bearing" id="qiblahBearingText">—</div>
+      <div class="qiblah-distance" id="qiblahDistanceText"></div>
+    </div>
+
+    <!-- Status / prompt -->
+    <div class="qiblah-status" id="qiblahStatus">
+      Tap below to find your Qiblah direction.
+    </div>
+
+    <button class="qiblah-btn" id="qiblahStartBtn" onclick="startQiblah()">
+      Find Qiblah
+    </button>
+
+    <div class="qiblah-calibration" id="qiblahCalib" style="display:none">
+      For accuracy, calibrate your compass by moving<br>your phone in a figure-8 motion.
+    </div>
+
+  </section>
+
   <!-- ── Nav ── -->
   <nav class="nav">
     <button class="nav-btn active" data-tab="counter" onclick="goTab('counter')">
@@ -545,6 +705,10 @@
     <button class="nav-btn" data-tab="duas" onclick="goTab('duas')">
       <span class="nav-icon">&#x1F932;</span>
       <span class="nav-lbl">Du&#x2019;ā</span>
+    </button>
+    <button class="nav-btn" data-tab="qiblah" onclick="goTab('qiblah')">
+      <span class="nav-icon">&#x1F9ED;</span>
+      <span class="nav-lbl">Qiblah</span>
     </button>
   </nav>
 
@@ -1459,6 +1623,157 @@ function renderDuas(items, query) {
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+// ═══════════════════════════════════════════════════
+//  QIBLAH
+// ═══════════════════════════════════════════════════
+const KAABA = { lat: 21.4225, lng: 39.8262 }; // Ka'bah coordinates
+
+let qiblahBearing   = null; // degrees from north to Mecca from user's location
+let qiblahActive    = false;
+let orientationBound = false;
+
+// Great-circle bearing from (lat1,lng1) to (lat2,lng2), returns 0-360
+function calcBearing(lat1, lng1, lat2, lng2) {
+  const toRad = d => d * Math.PI / 180;
+  const toDeg = r => r * 180 / Math.PI;
+  const dLng = toRad(lng2 - lng1);
+  const φ1 = toRad(lat1), φ2 = toRad(lat2);
+  const y = Math.sin(dLng) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(dLng);
+  return (toDeg(Math.atan2(y, x)) + 360) % 360;
+}
+
+// Haversine distance in km
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function setQiblahStatus(msg) {
+  document.getElementById('qiblahStatus').textContent = msg;
+}
+
+function startQiblah() {
+  document.getElementById('qiblahStartBtn').style.display = 'none';
+  setQiblahStatus('Getting your location…');
+
+  if (!navigator.geolocation) {
+    setQiblahStatus('Geolocation is not supported by your browser.');
+    document.getElementById('qiblahStartBtn').style.display = '';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      qiblahBearing = calcBearing(lat, lng, KAABA.lat, KAABA.lng);
+      const dist = calcDistance(lat, lng, KAABA.lat, KAABA.lng);
+
+      // Show bearing + distance
+      document.getElementById('qiblahInfo').style.display = 'flex';
+      document.getElementById('qiblahBearingText').textContent = Math.round(qiblahBearing) + '°';
+      document.getElementById('qiblahDistanceText').textContent =
+        dist > 1000
+          ? (dist / 1000).toFixed(1) + ',000 km from the Ka\'bah'
+          : Math.round(dist) + ' km from the Ka\'bah';
+
+      // Kick off compass
+      requestCompass();
+    },
+    err => {
+      const msgs = {
+        1: 'Location permission denied. Please allow access in your browser settings.',
+        2: 'Location unavailable. Try again in a moment.',
+        3: 'Location request timed out. Please try again.',
+      };
+      setQiblahStatus(msgs[err.code] || 'Could not get your location.');
+      document.getElementById('qiblahStartBtn').style.display = '';
+      document.getElementById('qiblahStartBtn').textContent = 'Try Again';
+    },
+    { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
+  );
+}
+
+function requestCompass() {
+  // iOS 13+ requires permission for DeviceOrientationEvent
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(state => {
+        if (state === 'granted') {
+          bindOrientation();
+        } else {
+          showStaticQiblah();
+        }
+      })
+      .catch(() => showStaticQiblah());
+  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+    bindOrientation();
+  } else {
+    showStaticQiblah();
+  }
+}
+
+function bindOrientation() {
+  if (orientationBound) return;
+  orientationBound = true;
+  qiblahActive = true;
+  window.addEventListener('deviceorientationabsolute', onOrientation, true);
+  window.addEventListener('deviceorientation', onOrientation, true);
+  setQiblahStatus('Point your phone toward the Ka\'bah. ✦');
+  document.getElementById('qiblahCalib').style.display = '';
+}
+
+function onOrientation(e) {
+  if (qiblahBearing === null) return;
+
+  let heading;
+  // iOS
+  if (e.webkitCompassHeading != null) {
+    heading = e.webkitCompassHeading;
+  }
+  // Android absolute
+  else if (e.absolute && e.alpha != null) {
+    heading = (360 - e.alpha) % 360;
+  }
+  // Android non-absolute fallback
+  else if (e.alpha != null) {
+    heading = (360 - e.alpha) % 360;
+  } else {
+    return;
+  }
+
+  const needleAngle = (qiblahBearing - heading + 360) % 360;
+  document.getElementById('qiblahNeedle').style.transform = `rotate(${needleAngle}deg)`;
+  document.getElementById('qiblahBearingText').textContent = Math.round(qiblahBearing) + '°';
+}
+
+function showStaticQiblah() {
+  // No compass available — show bearing angle only, needle points north statically
+  document.getElementById('qiblahNeedle').style.transform = `rotate(${qiblahBearing}deg)`;
+  setQiblahStatus(
+    'Live compass not available on this device. The needle shows the Qiblah direction from North.'
+  );
+}
+
+// Qiblah-aware tab switching — pauses compass when off-tab, resumes when back
+const _goTabOriginal = goTab;
+goTab = function(id) {
+  if (id !== 'qiblah' && qiblahActive) {
+    window.removeEventListener('deviceorientationabsolute', onOrientation, true);
+    window.removeEventListener('deviceorientation', onOrientation, true);
+    qiblahActive = false;
+    orientationBound = false;
+  }
+  if (id === 'qiblah' && qiblahBearing !== null && !qiblahActive) {
+    bindOrientation();
+  }
+  _goTabOriginal(id);
+};
+
 draw();
 renderAdhkarLists();
 updateCentering();

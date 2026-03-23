@@ -244,73 +244,148 @@
     .nav-icon{font-size:23px;line-height:1}
     .nav-lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
 
-    /* ── Qiblah Tab ─────────────────────── */
-    #tab-qiblah{
-      align-items:center; justify-content:center;
-      padding:20px 24px calc(var(--safe-b) + 20px);
-      gap:28px;
-    }
+    /* ── Asmā' al-Ḥusnā Tab ────────────────── */
+    #tab-asma{padding:0}
 
-    .qiblah-compass-wrap{
-      position:relative;
-      width:min(72vw, 300px);
-      height:min(72vw, 300px);
+    .asma-search-wrap{
       flex-shrink:0;
+      padding:14px 16px 12px;
+      background:var(--hdr-bg);
+      border-bottom:1px solid var(--border);
+      transition:background .3s;
+    }
+    .asma-search-row{
+      display:flex;align-items:center;gap:10px;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:12px;padding:0 14px;transition:border-color .2s;
+    }
+    .asma-search-row:focus-within{border-color:var(--gold-dim)}
+    .asma-search-icon{font-size:16px;color:var(--text-muted);flex-shrink:0}
+    .asma-search-input{
+      flex:1;padding:12px 0;background:none;border:none;outline:none;
+      color:var(--text);font-family:'Lato',sans-serif;font-size:15px;font-weight:300;
+    }
+    .asma-search-input::placeholder{color:var(--text-muted)}
+    .asma-search-clear{
+      background:none;border:none;cursor:pointer;
+      color:var(--text-muted);font-size:18px;padding:4px;line-height:1;display:none;
+    }
+    .asma-search-clear.visible{display:block}
+    .asma-hint{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:11px;color:var(--text-muted);margin-top:8px;padding-left:2px;
+      letter-spacing:.02em;
     }
 
-    /* outer ring — cardinal labels */
-    .qiblah-compass-svg{ width:100%; height:100%; }
-
-    /* needle container rotates as one */
-    .qiblah-needle-wrap{
-      position:absolute; inset:0;
-      transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    .asma-grid{
+      flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      padding:14px 12px calc(var(--safe-b) + 14px);
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+      gap:9px;
+      align-content:start;
     }
 
-    .qiblah-info{
-      display:flex; flex-direction:column;
-      align-items:center; gap:6px;
-      text-align:center;
+    .asma-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px 13px 13px;
+      cursor:pointer;
+      transition:border-color .18s,background .18s;
+      display:flex;flex-direction:column;gap:6px;
     }
+    .asma-card:active{border-color:var(--gold-dim);background:rgba(201,170,82,.05)}
 
-    .qiblah-label{
-      font-size:13px; letter-spacing:.12em;
-      text-transform:uppercase; color:var(--gold);
+    .asma-num{
+      font-size:9.5px;letter-spacing:.12em;
+      color:var(--text-muted);
     }
-
-    .qiblah-bearing{
-      font-size:clamp(36px,10vw,52px);
-      font-weight:500; color:var(--text); line-height:1;
-    }
-
-    .qiblah-distance{
-      font-family:'Lato',sans-serif; font-weight:300;
-      font-size:13px; color:var(--text-sub);
-    }
-
-    .qiblah-status{
-      font-family:'Lato',sans-serif; font-weight:300;
-      font-size:12px; color:var(--text-muted);
-      text-align:center; max-width:260px; line-height:1.6;
-    }
-
-    .qiblah-btn{
-      padding:12px 28px; border-radius:12px;
-      border:1px solid var(--gold-dim);
-      background:rgba(201,170,82,.08);
+    .asma-arabic{
+      font-family:'Scheherazade New',serif;
+      font-size:clamp(20px,5.5vw,26px);
+      line-height:1.5;direction:rtl;
       color:var(--gold);
-      font-family:'Cinzel',serif; font-size:12px;
-      letter-spacing:.1em; cursor:pointer;
-      transition:all .2s;
     }
-    .qiblah-btn:active{ opacity:.7 }
-
-    .qiblah-calibration{
-      font-family:'Lato',sans-serif; font-weight:300;
-      font-size:11px; color:var(--text-muted);
-      text-align:center; max-width:240px; line-height:1.7;
+    .asma-translit{
+      font-family:'Cinzel',serif;
+      font-size:11px;letter-spacing:.04em;
+      color:var(--text-sub);
+    }
+    .asma-meaning{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:12px;color:var(--text-muted);
+      line-height:1.4;
     }
 
+    /* Detail overlay */
+    .asma-overlay{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(0,0,0,.6);
+      display:flex;align-items:flex-end;
+      padding:0;
+      opacity:0;pointer-events:none;
+      transition:opacity .22s;
+    }
+    .asma-overlay.open{opacity:1;pointer-events:all}
+
+    .asma-detail{
+      width:100%;
+      background:var(--surface);
+      border-radius:20px 20px 0 0;
+      padding:28px 24px calc(var(--safe-b) + 32px);
+      transform:translateY(24px);
+      transition:transform .22s cubic-bezier(.4,0,.2,1);
+      text-align:center;
+      display:flex;flex-direction:column;gap:14px;
+    }
+    .asma-overlay.open .asma-detail{transform:translateY(0)}
+
+    .asma-detail-num{
+      font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--text-muted);
+    }
+    .asma-detail-arabic{
+      font-family:'Scheherazade New',serif;
+      font-size:clamp(36px,12vw,58px);
+      line-height:1.4;direction:rtl;
+      color:var(--gold);
+      text-shadow:0 0 30px var(--gold-glow);
+    }
+    .asma-detail-translit{
+      font-family:'Cinzel',serif;
+      font-size:16px;letter-spacing:.06em;
+      color:var(--text);
+    }
+    .asma-detail-meaning{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:15px;color:var(--text-sub);
+      line-height:1.6;font-style:italic;
+    }
+    .asma-detail-ref{
+      font-family:'Lato',sans-serif;font-size:11px;
+      color:var(--text-muted);
+    }
+    .asma-detail-close{
+      margin-top:4px;padding:13px;
+      background:var(--surface2);border:1px solid var(--border);
+      border-radius:12px;cursor:pointer;
+      font-family:'Cinzel',serif;font-size:11px;
+      letter-spacing:.1em;color:var(--text-sub);
+      transition:all .18s;
+    }
+    .asma-detail-close:active{color:var(--text)}
+
+    .asma-empty{
+      grid-column:1/-1;
+      display:flex;flex-direction:column;align-items:center;
+      padding:40px 20px;gap:12px;text-align:center;
+    }
+    .asma-empty-icon{font-size:32px;opacity:.3}
+    .asma-empty-text{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:14px;color:var(--text-muted);
+    }
     ::-webkit-scrollbar{width:0}
 
 
@@ -600,97 +675,38 @@
 
   </section>
 
-  <!-- ══════════ QIBLAH TAB ══════════ -->
-  <section class="tab" id="tab-qiblah">
 
-    <!-- Compass -->
-    <div class="qiblah-compass-wrap" id="qiblahCompassWrap">
-      <svg class="qiblah-compass-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="needleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%"   stop-color="#dfc070"/>
-            <stop offset="100%" stop-color="#c9aa52"/>
-          </linearGradient>
-          <!-- subtle glow filter for kaaba icon -->
-          <filter id="goldGlow">
-            <feGaussianBlur stdDeviation="2" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
 
-        <!-- track ring -->
-        <circle cx="150" cy="150" r="138" fill="none" stroke="var(--track)" stroke-width="2"/>
-        <!-- decorative dashes -->
-        <circle cx="150" cy="150" r="128" fill="none" stroke="var(--border)" stroke-width="1"
-          stroke-dasharray="3 9.05"/>
+  <!-- ══════════ ASMĀ' TAB ══════════ -->
+  <section class="tab" id="tab-asma">
 
-        <!-- cardinal tick marks -->
-        <g stroke="var(--border2,#2e3648)" stroke-width="1.5">
-          <!-- N -->  <line x1="150" y1="16" x2="150" y2="28"/>
-          <!-- E -->  <line x1="284" y1="150" x2="272" y2="150"/>
-          <!-- S -->  <line x1="150" y1="284" x2="150" y2="272"/>
-          <!-- W -->  <line x1="16" y1="150" x2="28" y2="150"/>
-        </g>
-        <!-- intercardinal ticks (smaller) -->
-        <g stroke="var(--border)" stroke-width="1" opacity="0.7">
-          <line x1="247.5" y1="52.5" x2="240" y2="60"/>
-          <line x1="247.5" y1="247.5" x2="240" y2="240"/>
-          <line x1="52.5" y1="247.5" x2="60" y2="240"/>
-          <line x1="52.5" y1="52.5" x2="60" y2="60"/>
-        </g>
-
-        <!-- cardinal letters -->
-        <g font-family="Cinzel,serif" font-size="14" font-weight="600" fill="var(--text-muted)" text-anchor="middle">
-          <text x="150" y="12">N</text>
-          <text x="291" y="155">E</text>
-          <text x="150" y="298">S</text>
-          <text x="9"   y="155">W</text>
-        </g>
-
-        <!-- centre dot -->
-        <circle cx="150" cy="150" r="5" fill="var(--surface2)" stroke="var(--border2,#2e3648)" stroke-width="1.5"/>
-      </svg>
-
-      <!-- Needle (rotates via JS) -->
-      <div class="qiblah-needle-wrap" id="qiblahNeedle">
-        <svg viewBox="0 0 300 300" style="width:100%;height:100%;position:absolute;inset:0" xmlns="http://www.w3.org/2000/svg">
-          <!-- Qiblah (gold) end — points toward Mecca -->
-          <polygon points="150,30 143,150 157,150"
-            fill="url(#needleGrad)"
-            filter="url(#goldGlow)"/>
-          <!-- Opposite (dim) end -->
-          <polygon points="150,270 143,150 157,150"
-            fill="var(--border2,#2e3648)"/>
-          <!-- Ka'bah icon at tip -->
-          <rect x="143" y="18" width="14" height="14" rx="2"
-            fill="var(--gold)" opacity="0.9" filter="url(#goldGlow)"/>
-          <rect x="146" y="21" width="8" height="8" rx="1"
-            fill="var(--bg)" opacity="0.6"/>
-        </svg>
+    <div class="asma-search-wrap">
+      <div class="asma-search-row">
+        <span class="asma-search-icon">&#x2728;</span>
+        <input class="asma-search-input" id="asmaInput" type="text"
+               placeholder="Search by name, meaning, or number…"
+               oninput="onAsmaSearch(this.value)"
+               autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="asma-search-clear" id="asmaClear" onclick="clearAsmaSearch()">&#x2715;</button>
       </div>
+      <div class="asma-hint">99 Names of Allāh &middot; al-Asmā&#x2019; al-Ḥusnā</div>
     </div>
 
-    <!-- Bearing + distance -->
-    <div class="qiblah-info" id="qiblahInfo" style="display:none">
-      <div class="qiblah-label">Qiblah Direction</div>
-      <div class="qiblah-bearing" id="qiblahBearingText">—</div>
-      <div class="qiblah-distance" id="qiblahDistanceText"></div>
-    </div>
-
-    <!-- Status / prompt -->
-    <div class="qiblah-status" id="qiblahStatus">
-      Tap below to find your Qiblah direction.
-    </div>
-
-    <button class="qiblah-btn" id="qiblahStartBtn" onclick="startQiblah()">
-      Find Qiblah
-    </button>
-
-    <div class="qiblah-calibration" id="qiblahCalib" style="display:none">
-      For accuracy, calibrate your compass by moving<br>your phone in a figure-8 motion.
-    </div>
+    <div class="asma-grid" id="asmaGrid"></div>
 
   </section>
+
+  <!-- Detail overlay -->
+  <div class="asma-overlay" id="asmaOverlay" onclick="closeAsmaDetail()">
+    <div class="asma-detail" onclick="event.stopPropagation()">
+      <div class="asma-detail-num" id="detailNum"></div>
+      <div class="asma-detail-arabic" id="detailArabic"></div>
+      <div class="asma-detail-translit" id="detailTranslit"></div>
+      <div class="asma-detail-meaning" id="detailMeaning"></div>
+      <div class="asma-detail-ref" id="detailRef"></div>
+      <button class="asma-detail-close" onclick="closeAsmaDetail()">Close</button>
+    </div>
+  </div>
 
   <!-- ── Nav ── -->
   <nav class="nav">
@@ -706,9 +722,9 @@
       <span class="nav-icon">&#x1F932;</span>
       <span class="nav-lbl">Du&#x2019;ā</span>
     </button>
-    <button class="nav-btn" data-tab="qiblah" onclick="goTab('qiblah')">
-      <span class="nav-icon">&#x1F9ED;</span>
-      <span class="nav-lbl">Qiblah</span>
+    <button class="nav-btn" data-tab="asma" onclick="goTab('asma')">
+      <span class="nav-icon">&#x2728;</span>
+      <span class="nav-lbl">Asmā&#x2019;</span>
     </button>
   </nav>
 
@@ -1623,165 +1639,173 @@ function renderDuas(items, query) {
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+
 // ═══════════════════════════════════════════════════
-//  QIBLAH
+//  AL-ASMĀ' AL-ḤUSNĀ  — The 99 Names of Allāh
 // ═══════════════════════════════════════════════════
-const KAABA = { lat: 21.4225, lng: 39.8262 };
+const ASMA = [
+  { n:1,  ar:"ٱلرَّحْمَٰنُ",         tr:"Ar-Raḥmān",        en:"The Most Gracious",              ref:"Qur'ān 1:1",           desc:"The one whose mercy is vast and encompasses all of creation in this life, believer and disbeliever alike." },
+  { n:2,  ar:"ٱلرَّحِيمُ",           tr:"Ar-Raḥīm",         en:"The Most Merciful",              ref:"Qur'ān 1:1",           desc:"The one whose mercy is specifically directed to the believers in the Hereafter — a special, enduring mercy." },
+  { n:3,  ar:"ٱلْمَلِكُ",            tr:"Al-Malik",         en:"The Sovereign",                  ref:"Qur'ān 20:114",        desc:"The absolute Ruler of all existence — heavens, earth and everything between — who owns all dominion." },
+  { n:4,  ar:"ٱلْقُدُّوسُ",          tr:"Al-Quddūs",        en:"The Most Holy",                  ref:"Qur'ān 62:1",          desc:"The one utterly free from every imperfection, deficiency, error and partner — perfect in every attribute." },
+  { n:5,  ar:"ٱلسَّلَامُ",           tr:"As-Salām",         en:"The Source of Peace",            ref:"Qur'ān 59:23",         desc:"The one free from all faults and flaws, who grants safety and peace to His creation." },
+  { n:6,  ar:"ٱلْمُؤْمِنُ",          tr:"Al-Mu'min",        en:"The Granter of Security",        ref:"Qur'ān 59:23",         desc:"The one who secures and reassures His servants, who fulfils His promises and grants protection from fear." },
+  { n:7,  ar:"ٱلْمُهَيْمِنُ",        tr:"Al-Muhaymin",      en:"The Guardian",                   ref:"Qur'ān 59:23",         desc:"The watchful protector who guards and oversees all affairs of His creation with complete knowledge." },
+  { n:8,  ar:"ٱلْعَزِيزُ",           tr:"Al-'Azīz",         en:"The All-Mighty",                 ref:"Qur'ān 3:6",           desc:"The one of supreme power who is never overcome, never weakened, and who subdues all things." },
+  { n:9,  ar:"ٱلْجَبَّارُ",          tr:"Al-Jabbār",        en:"The Compeller",                  ref:"Qur'ān 59:23",         desc:"The one who compels all things according to His will, who sets aright what is broken and mends what is fractured." },
+  { n:10, ar:"ٱلْمُتَكَبِّرُ",       tr:"Al-Mutakabbir",    en:"The Majestic",                   ref:"Qur'ān 59:23",         desc:"The one whose greatness is transcendent — far above any partner, rival or likeness." },
+  { n:11, ar:"ٱلْخَالِقُ",           tr:"Al-Khāliq",        en:"The Creator",                    ref:"Qur'ān 59:24",         desc:"The originator who brings into existence from absolute nothingness — with no model or precedent." },
+  { n:12, ar:"ٱلْبَارِئُ",           tr:"Al-Bāri'",         en:"The Originator",                 ref:"Qur'ān 59:24",         desc:"The one who creates and perfectly distinguishes all things, giving each being its unique form and nature." },
+  { n:13, ar:"ٱلْمُصَوِّرُ",         tr:"Al-Muṣawwir",      en:"The Fashioner",                  ref:"Qur'ān 59:24",         desc:"The one who gives every created thing its particular shape, appearance and features, in the womb and beyond." },
+  { n:14, ar:"ٱلْغَفَّارُ",          tr:"Al-Ghaffār",       en:"The Repeatedly Forgiving",       ref:"Qur'ān 20:82",         desc:"The one who perpetually forgives — covering sins again and again for those who turn to Him in sincere repentance." },
+  { n:15, ar:"ٱلْقَهَّارُ",          tr:"Al-Qahhār",        en:"The All-Subduing",               ref:"Qur'ān 13:16",         desc:"The one who subdues and overcomes all things, against whom nothing can resist or prevail." },
+  { n:16, ar:"ٱلْوَهَّابُ",          tr:"Al-Wahhāb",        en:"The Bestower",                   ref:"Qur'ān 3:8",           desc:"The one who gives freely and bountifully without limit, expecting nothing in return." },
+  { n:17, ar:"ٱلرَّزَّاقُ",          tr:"Ar-Razzāq",        en:"The Provider",                   ref:"Qur'ān 51:58",         desc:"The one who provides sustenance — physical and spiritual — for all of creation without exception." },
+  { n:18, ar:"ٱلْفَتَّاحُ",          tr:"Al-Fattāḥ",        en:"The Opener",                     ref:"Qur'ān 34:26",         desc:"The one who opens doors of mercy, victory, knowledge and sustenance — the supreme Judge who resolves all matters." },
+  { n:19, ar:"ٱلْعَلِيمُ",           tr:"Al-'Alīm",         en:"The All-Knowing",                ref:"Qur'ān 2:29",          desc:"The one whose knowledge encompasses absolutely everything — apparent and hidden, past, present and future." },
+  { n:20, ar:"ٱلْقَابِضُ",           tr:"Al-Qābiḍ",         en:"The Withholder",                 ref:"Qur'ān 2:245",         desc:"The one who withholds and constricts according to perfect wisdom — never withholding out of miserliness." },
+  { n:21, ar:"ٱلْبَاسِطُ",           tr:"Al-Bāsiṭ",         en:"The Expander",                   ref:"Qur'ān 2:245",         desc:"The one who expands provision, mercy and comfort to whom He wills — always paired with Al-Qābiḍ in His perfect balance." },
+  { n:22, ar:"ٱلْخَافِضُ",           tr:"Al-Khāfiḍ",        en:"The Humbler",                    ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who lowers the arrogant and the oppressors, subjugating whoever He wills in perfect justice." },
+  { n:23, ar:"ٱلرَّافِعُ",           tr:"Ar-Rāfi'",         en:"The Exalter",                    ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who raises in honour and station whomever He wills — believers in this life and the Hereafter." },
+  { n:24, ar:"ٱلْمُعِزُّ",           tr:"Al-Mu'izz",        en:"The Honourer",                   ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who grants honour, dignity and strength to whomever He wills — none can dishonour whom Allah honours." },
+  { n:25, ar:"ٱلْمُذِلُّ",           tr:"Al-Mudhill",       en:"The Dishonourer",                ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who brings low and humiliates whomever He wills — none can honour whom Allah chooses to abase." },
+  { n:26, ar:"ٱلسَّمِيعُ",           tr:"As-Samī'",         en:"The All-Hearing",                ref:"Qur'ān 2:127",         desc:"The one who hears every sound and speech, however secret or silent — every supplication, every whisper of the heart." },
+  { n:27, ar:"ٱلْبَصِيرُ",           tr:"Al-Baṣīr",         en:"The All-Seeing",                 ref:"Qur'ān 17:1",          desc:"The one who sees all things — apparent and hidden, the movement of an ant in darkness, every atom of creation." },
+  { n:28, ar:"ٱلْحَكَمُ",            tr:"Al-Ḥakam",         en:"The Judge",                      ref:"Ṣaḥīḥ Bukhārī",        desc:"The ultimate arbitrator whose judgement is final and whose ruling is never unjust or mistaken." },
+  { n:29, ar:"ٱلْعَدْلُ",            tr:"Al-'Adl",          en:"The Just",                       ref:"Ṣaḥīḥ Tirmidhī",       desc:"Perfect justice in every decree — He never wrongs anyone by so much as the weight of an atom." },
+  { n:30, ar:"ٱللَّطِيفُ",           tr:"Al-Laṭīf",         en:"The Subtle",                     ref:"Qur'ān 6:103",         desc:"The one who is gentle and kind, who reaches the most subtle matters and whose favour comes in ways unseen." },
+  { n:31, ar:"ٱلْخَبِيرُ",           tr:"Al-Khabīr",        en:"The All-Aware",                  ref:"Qur'ān 6:18",          desc:"The one with innermost awareness of all things — nothing escapes His knowledge, however subtle or concealed." },
+  { n:32, ar:"ٱلْحَلِيمُ",           tr:"Al-Ḥalīm",         en:"The Forbearing",                 ref:"Qur'ān 2:225",         desc:"The one who delays punishment out of perfect patience and forbearance, giving people opportunity to repent." },
+  { n:33, ar:"ٱلْعَظِيمُ",           tr:"Al-'Aẓīm",         en:"The Most Great",                 ref:"Qur'ān 2:255",         desc:"The one of supreme greatness — whose greatness is beyond all human comprehension or measure." },
+  { n:34, ar:"ٱلْغَفُورُ",           tr:"Al-Ghafūr",        en:"The Forgiving",                  ref:"Qur'ān 2:173",         desc:"The one who forgives completely, wiping away sins as if they never existed — the most frequent name in the Qur'ān." },
+  { n:35, ar:"ٱلشَّكُورُ",           tr:"Ash-Shakūr",       en:"The Grateful",                   ref:"Qur'ān 35:30",         desc:"The one who appreciates even the smallest good deed and rewards it abundantly, multiplying it many times over." },
+  { n:36, ar:"ٱلْعَلِيُّ",           tr:"Al-'Alī",          en:"The Most High",                  ref:"Qur'ān 2:255",         desc:"The one exalted above all creation in His essence, attributes and power — nothing is above Him." },
+  { n:37, ar:"ٱلْكَبِيرُ",           tr:"Al-Kabīr",         en:"The Most Grand",                 ref:"Qur'ān 13:9",          desc:"The one who is great in every aspect — greater than all things can imagine or describe." },
+  { n:38, ar:"ٱلْحَفِيظُ",           tr:"Al-Ḥafīẓ",         en:"The Preserver",                  ref:"Qur'ān 11:57",         desc:"The one who preserves and protects — recording all deeds and safeguarding those who seek His protection." },
+  { n:39, ar:"ٱلْمُقِيتُ",           tr:"Al-Muqīt",         en:"The Sustainer",                  ref:"Qur'ān 4:85",          desc:"The one who provides and sustains every creature with its exact needs — body, soul and spirit alike." },
+  { n:40, ar:"ٱلْحَسِيبُ",           tr:"Al-Ḥasīb",         en:"The Reckoner",                   ref:"Qur'ān 4:6",           desc:"The one who takes full account of all things — sufficient as a guardian and witness for each soul." },
+  { n:41, ar:"ٱلْجَلِيلُ",           tr:"Al-Jalīl",         en:"The Majestic",                   ref:"Ṣaḥīḥ Tirmidhī",       desc:"The possessor of absolute majesty and glory — the most exalted in attributes of power, greatness and honour." },
+  { n:42, ar:"ٱلْكَرِيمُ",           tr:"Al-Karīm",         en:"The Most Generous",              ref:"Qur'ān 23:116",        desc:"The one of boundless generosity — who gives without being asked, far beyond what is deserved." },
+  { n:43, ar:"ٱلرَّقِيبُ",           tr:"Ar-Raqīb",         en:"The Watchful",                   ref:"Qur'ān 4:1",           desc:"The ever-watchful guardian over every action, thought and intention — nothing escapes His vigilance." },
+  { n:44, ar:"ٱلْمُجِيبُ",           tr:"Al-Mujīb",         en:"The Responsive",                 ref:"Qur'ān 11:61",         desc:"The one who answers every supplication — responding to the caller whenever they sincerely call upon Him." },
+  { n:45, ar:"ٱلْوَاسِعُ",           tr:"Al-Wāsi'",         en:"The All-Encompassing",           ref:"Qur'ān 2:115",         desc:"The one whose mercy, knowledge, and bounty are immeasurably vast — encompassing all of creation." },
+  { n:46, ar:"ٱلْحَكِيمُ",           tr:"Al-Ḥakīm",         en:"The Wise",                       ref:"Qur'ān 2:129",         desc:"The one whose wisdom is perfect in every decree — placing everything in its rightful place for perfect reason." },
+  { n:47, ar:"ٱلْوَدُودُ",           tr:"Al-Wadūd",         en:"The Loving",                     ref:"Qur'ān 11:90",         desc:"The one who loves His believing servants with a love greater and more perfect than any love in creation." },
+  { n:48, ar:"ٱلْمَجِيدُ",           tr:"Al-Majīd",         en:"The Glorious",                   ref:"Qur'ān 11:73",         desc:"The one of glory and honour — combining supreme nobility, vast generosity and perfect majesty." },
+  { n:49, ar:"ٱلْبَاعِثُ",           tr:"Al-Bā'ith",        en:"The Resurrector",                ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who will resurrect all of creation from their graves for the reckoning on the Day of Judgement." },
+  { n:50, ar:"ٱلشَّهِيدُ",           tr:"Ash-Shahīd",       en:"The Witness",                    ref:"Qur'ān 4:79",          desc:"The one who witnesses all things in all places and at all times — nothing is hidden from His witness." },
+  { n:51, ar:"ٱلْحَقُّ",             tr:"Al-Ḥaqq",          en:"The Absolute Truth",             ref:"Qur'ān 22:6",          desc:"The one whose existence, attributes and words are the absolute truth — everything else is contingent." },
+  { n:52, ar:"ٱلْوَكِيلُ",           tr:"Al-Wakīl",         en:"The Trustee",                    ref:"Qur'ān 3:173",         desc:"The ultimate trustee upon whom all affairs can be entrusted — sufficient as a guardian and disposer of all things." },
+  { n:53, ar:"ٱلْقَوِيُّ",           tr:"Al-Qawī",          en:"The Most Strong",                ref:"Qur'ān 22:40",         desc:"The one of perfect, absolute strength — whose power is inexhaustible and can never be diminished." },
+  { n:54, ar:"ٱلْمَتِينُ",           tr:"Al-Matīn",         en:"The Firm",                       ref:"Qur'ān 51:58",         desc:"The one of absolute firmness and constancy — whose strength is resolute, never weakening or changing." },
+  { n:55, ar:"ٱلْوَلِيُّ",           tr:"Al-Walī",          en:"The Protecting Friend",          ref:"Qur'ān 4:45",          desc:"The guardian and close ally of the believers — who loves and assists them in all their affairs." },
+  { n:56, ar:"ٱلْحَمِيدُ",           tr:"Al-Ḥamīd",         en:"The Praiseworthy",               ref:"Qur'ān 14:8",          desc:"The one deserving all praise — praised in His essence and all attributes, whether people acknowledge it or not." },
+  { n:57, ar:"ٱلْمُحْصِي",           tr:"Al-Muḥṣī",         en:"The Appraiser",                  ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who takes account of and enumerates all things — no deed, however small, escapes His reckoning." },
+  { n:58, ar:"ٱلْمُبْدِئُ",          tr:"Al-Mubdi'",        en:"The Initiator",                  ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who originates creation from nothing at its very beginning, without prior example or precedent." },
+  { n:59, ar:"ٱلْمُعِيدُ",           tr:"Al-Mu'īd",         en:"The Restorer",                   ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who restores creation after its end — bringing back to life all that died, exactly as He first created it." },
+  { n:60, ar:"ٱلْمُحْيِي",           tr:"Al-Muḥyī",         en:"The Giver of Life",              ref:"Qur'ān 30:50",         desc:"The one who gives life — physical and spiritual — and who will restore life to all creation on the Day of Resurrection." },
+  { n:61, ar:"ٱلْمُمِيتُ",           tr:"Al-Mumīt",         en:"The Taker of Life",              ref:"Qur'ān 3:156",         desc:"The one who causes death — for death is His alone to ordain, and no soul dies except by His permission." },
+  { n:62, ar:"ٱلْحَيُّ",             tr:"Al-Ḥayy",          en:"The Ever-Living",                ref:"Qur'ān 2:255",         desc:"The one whose life is perfect and eternal — without beginning, without end, never diminished in any way." },
+  { n:63, ar:"ٱلْقَيُّومُ",          tr:"Al-Qayyūm",        en:"The Self-Sustaining",            ref:"Qur'ān 2:255",         desc:"The one who is entirely self-subsistent and on whom all creation depends — He needs nothing, all things need Him." },
+  { n:64, ar:"ٱلْوَاجِدُ",           tr:"Al-Wājid",         en:"The Finder",                     ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who finds and obtains whatever He wills instantly — nothing He seeks is ever beyond His reach." },
+  { n:65, ar:"ٱلْمَاجِدُ",           tr:"Al-Mājid",         en:"The Illustrious",                ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one of boundless glory, excellence and nobility — exalted in character above all that can be described." },
+  { n:66, ar:"ٱلْوَاحِدُ",           tr:"Al-Wāḥid",         en:"The One",                        ref:"Qur'ān 13:16",         desc:"The singular, indivisible one — alone in His essence, His attributes and His right to be worshipped." },
+  { n:67, ar:"ٱلْأَحَدُ",            tr:"Al-Aḥad",          en:"The Unique",                     ref:"Qur'ān 112:1",         desc:"The uniquely one — with no partner, no equal, no counterpart and absolutely no comparison in any respect." },
+  { n:68, ar:"ٱلصَّمَدُ",            tr:"Aṣ-Ṣamad",         en:"The Eternal Refuge",             ref:"Qur'ān 112:2",         desc:"The one to whom all of creation turns in need and dependence — He has no need of any and all have need of Him." },
+  { n:69, ar:"ٱلْقَادِرُ",           tr:"Al-Qādir",         en:"The All-Powerful",               ref:"Qur'ān 6:65",          desc:"The one who has complete and perfect power over all things — able to do whatever He wills, instantly and completely." },
+  { n:70, ar:"ٱلْمُقْتَدِرُ",        tr:"Al-Muqtadir",      en:"The Omnipotent",                 ref:"Qur'ān 54:42",         desc:"The one of unrestricted, absolute power — His authority over all creation is total and can never be challenged." },
+  { n:71, ar:"ٱلْمُقَدِّمُ",         tr:"Al-Muqaddim",      en:"The Expediter",                  ref:"Ṣaḥīḥ Bukhārī",        desc:"The one who brings forward whatever He wills — advancing in rank and precedence according to His perfect wisdom." },
+  { n:72, ar:"ٱلْمُؤَخِّرُ",         tr:"Al-Mu'akhkhir",    en:"The Delayer",                    ref:"Ṣaḥīḥ Bukhārī",        desc:"The one who delays according to His wisdom — postponing matters and placing them in their rightful time." },
+  { n:73, ar:"ٱلْأَوَّلُ",           tr:"Al-Awwal",         en:"The First",                      ref:"Qur'ān 57:3",          desc:"The first without any beginning — before everything was, He existed, with nothing before Him." },
+  { n:74, ar:"ٱلْآخِرُ",             tr:"Al-Ākhir",         en:"The Last",                       ref:"Qur'ān 57:3",          desc:"The last without any end — after all things have perished, He remains, with nothing after Him." },
+  { n:75, ar:"ٱلظَّاهِرُ",           tr:"Aẓ-Ẓāhir",        en:"The Manifest",                   ref:"Qur'ān 57:3",          desc:"The outwardly manifest — known through His signs, creation and attributes which are plain for all to see." },
+  { n:76, ar:"ٱلْبَاطِنُ",           tr:"Al-Bāṭin",         en:"The Hidden",                     ref:"Qur'ān 57:3",          desc:"The inwardly hidden — whose essence and reality is beyond the perception of His creation." },
+  { n:77, ar:"ٱلْوَالِي",            tr:"Al-Wālī",          en:"The Governor",                   ref:"Qur'ān 13:11",         desc:"The sole governor who manages and controls the affairs of all creation in perfect order." },
+  { n:78, ar:"ٱلْمُتَعَالِي",        tr:"Al-Muta'āl",       en:"The Most Exalted",               ref:"Qur'ān 13:9",          desc:"The one exalted far above all things — above His creation, above any likeness, beyond all limitation." },
+  { n:79, ar:"ٱلْبَرُّ",             tr:"Al-Barr",          en:"The Source of Goodness",         ref:"Qur'ān 52:28",         desc:"The one of perfect goodness, kindness and benevolence — whose acts toward His servants overflow with grace." },
+  { n:80, ar:"ٱلتَّوَّابُ",          tr:"At-Tawwāb",        en:"The Ever-Returning",             ref:"Qur'ān 2:37",          desc:"The one who perpetually accepts repentance — turning to the servant in mercy whenever the servant turns to Him." },
+  { n:81, ar:"ٱلْمُنْتَقِمُ",        tr:"Al-Muntaqim",      en:"The Avenger",                    ref:"Qur'ān 32:22",         desc:"The one who exacts justice and retribution upon those who persist in wrongdoing and oppression." },
+  { n:82, ar:"ٱلْعَفُوُّ",           tr:"Al-'Afuww",        en:"The Pardoner",                   ref:"Qur'ān 4:99",          desc:"The one who pardons and erases sins completely — leaving no trace, as if they never occurred." },
+  { n:83, ar:"ٱلرَّءُوفُ",           tr:"Ar-Ra'ūf",         en:"The Compassionate",              ref:"Qur'ān 3:30",          desc:"The one of the most tender compassion — an intense, encompassing compassion that removes harm from His servants." },
+  { n:84, ar:"مَالِكُ ٱلْمُلْكِ",   tr:"Mālik ul-Mulk",    en:"Owner of All Sovereignty",       ref:"Qur'ān 3:26",          desc:"The absolute owner of all kingdoms and dominion — giving and taking sovereignty from whomever He wills." },
+  { n:85, ar:"ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ", tr:"Dhul-Jalāl wal-Ikrām", en:"Lord of Majesty & Honour", ref:"Qur'ān 55:27", desc:"The one who possesses both supreme majesty and boundless honour — these two attributes belong to Him alone in perfection." },
+  { n:86, ar:"ٱلْمُقْسِطُ",          tr:"Al-Muqsiṭ",        en:"The Equitable",                  ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one of perfect equity and fairness in all judgement — never decreeing injustice for any of His creation." },
+  { n:87, ar:"ٱلْجَامِعُ",           tr:"Al-Jāmi'",         en:"The Gatherer",                   ref:"Qur'ān 3:9",           desc:"The one who gathers all of creation on the Day of Judgement — uniting what is scattered with perfect power." },
+  { n:88, ar:"ٱلْغَنِيُّ",           tr:"Al-Ghanī",         en:"The Self-Sufficient",            ref:"Qur'ān 35:15",         desc:"The one entirely free from need — He is rich beyond measure while all creation depends on Him absolutely." },
+  { n:89, ar:"ٱلْمُغْنِي",           tr:"Al-Mughnī",        en:"The Enricher",                   ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who grants wealth, contentment and independence — enriching whomever He wills from His limitless bounty." },
+  { n:90, ar:"ٱلْمَانِعُ",           tr:"Al-Māni'",         en:"The Withholder",                 ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who prevents and holds back according to His perfect wisdom — sometimes withholding to protect." },
+  { n:91, ar:"ٱلضَّارُّ",            tr:"Aḍ-Ḍārr",          en:"The Distressor",                 ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who allows harm to occur — He alone controls all affliction and nothing harms except by His leave." },
+  { n:92, ar:"ٱلنَّافِعُ",           tr:"An-Nāfi'",         en:"The Benefactor",                 ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who grants benefit — all benefit in creation comes only through His permission and will." },
+  { n:93, ar:"ٱلنُّورُ",             tr:"An-Nūr",           en:"The Light",                      ref:"Qur'ān 24:35",         desc:"The light of the heavens and the earth — the one who illuminates hearts, guides creation and removes darkness." },
+  { n:94, ar:"ٱلْهَادِي",            tr:"Al-Hādī",          en:"The Guide",                      ref:"Qur'ān 22:54",         desc:"The one who guides whomever He wills to truth, to the straight path and to eternal salvation." },
+  { n:95, ar:"ٱلْبَدِيعُ",           tr:"Al-Badī'",         en:"The Incomparable",               ref:"Qur'ān 2:117",         desc:"The originator of all things in a way that has no model, precedent or equivalent — uniquely creative." },
+  { n:96, ar:"ٱلْبَاقِي",            tr:"Al-Bāqī",          en:"The Everlasting",                ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one who endures forever — while all creation will perish, His existence is without end." },
+  { n:97, ar:"ٱلْوَارِثُ",           tr:"Al-Wārith",        en:"The Inheritor",                  ref:"Qur'ān 15:23",         desc:"The ultimate inheritor to whom all things return — when all else perishes, all possession reverts to Him alone." },
+  { n:98, ar:"ٱلرَّشِيدُ",           tr:"Ar-Rashīd",        en:"The Righteous Guide",            ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one of perfect guidance and right-directedness — whose management of all affairs is flawlessly right." },
+  { n:99, ar:"ٱلصَّبُورُ",           tr:"Aṣ-Ṣabūr",         en:"The Patient",                    ref:"Ṣaḥīḥ Tirmidhī",       desc:"The one of infinite patience — who delays punishment for the sinner, giving them time to repent and return." },
+];
 
-let qiblahBearing    = null;
-let qiblahActive     = false;
-let orientationBound = false;
-let smoothedHeading  = null;  // low-pass filtered heading
-let rawHeading       = null;  // latest raw sensor value
-let rafId            = null;  // rAF handle
-const SMOOTH         = 0.12;  // 0.05 = very smooth/slow · 0.2 = snappier
+let asmaFiltered = [...ASMA];
 
-// Great-circle bearing, returns 0–360
-function calcBearing(lat1, lng1, lat2, lng2) {
-  const R = Math.PI / 180;
-  const dL = (lng2 - lng1) * R, φ1 = lat1 * R, φ2 = lat2 * R;
-  const y  = Math.sin(dL) * Math.cos(φ2);
-  const x  = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(dL);
-  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-}
-
-// Haversine distance in km
-function calcDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371, r = Math.PI / 180;
-  const dLat = (lat2 - lat1) * r, dLng = (lng2 - lng1) * r;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-// Interpolate on the shortest arc — prevents needle spinning through 360° on wrap
-function circularLerp(current, target, f) {
-  let d = target - current;
-  if (d > 180) d -= 360;
-  if (d < -180) d += 360;
-  return (current + d * f + 360) % 360;
-}
-
-function setQiblahStatus(msg) {
-  document.getElementById('qiblahStatus').textContent = msg;
-}
-
-function startQiblah() {
-  document.getElementById('qiblahStartBtn').style.display = 'none';
-  setQiblahStatus('Getting your location…');
-
-  if (!navigator.geolocation) {
-    setQiblahStatus('Geolocation is not supported by your browser.');
-    document.getElementById('qiblahStartBtn').style.display = '';
+function renderAsmaGrid(list) {
+  const grid = document.getElementById('asmaGrid');
+  if (!list.length) {
+    grid.innerHTML = `<div class="asma-empty"><div class="asma-empty-icon">&#x2728;</div><div class="asma-empty-text">No names found</div></div>`;
     return;
   }
-
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      const { latitude: lat, longitude: lng } = pos.coords;
-      qiblahBearing = calcBearing(lat, lng, KAABA.lat, KAABA.lng);
-      const dist    = calcDistance(lat, lng, KAABA.lat, KAABA.lng);
-
-      document.getElementById('qiblahInfo').style.display = 'flex';
-      document.getElementById('qiblahBearingText').textContent = Math.round(qiblahBearing) + '°';
-      document.getElementById('qiblahDistanceText').textContent =
-        dist >= 1000
-          ? (dist / 1000).toFixed(1) + ',000 km from the Ka\'bah'
-          : Math.round(dist) + ' km from the Ka\'bah';
-
-      requestCompass();
-    },
-    err => {
-      const msgs = {
-        1: 'Location permission denied. Allow access in your browser settings.',
-        2: 'Location unavailable. Try again in a moment.',
-        3: 'Location request timed out. Please try again.',
-      };
-      setQiblahStatus(msgs[err.code] || 'Could not get your location.');
-      document.getElementById('qiblahStartBtn').style.display = '';
-      document.getElementById('qiblahStartBtn').textContent   = 'Try Again';
-    },
-    { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
-  );
+  grid.innerHTML = list.map(a => `
+    <div class="asma-card" onclick="openAsmaDetail(${a.n})">
+      <div class="asma-num">${String(a.n).padStart(2,'0')}</div>
+      <div class="asma-arabic">${a.ar}</div>
+      <div class="asma-translit">${a.tr}</div>
+      <div class="asma-meaning">${a.en}</div>
+    </div>`).join('');
 }
 
-function requestCompass() {
-  if (typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-    // iOS 13+ — must be called in a user-gesture context
-    DeviceOrientationEvent.requestPermission()
-      .then(s => s === 'granted' ? bindOrientation() : showStaticQiblah())
-      .catch(() => showStaticQiblah());
-  } else if (typeof DeviceOrientationEvent !== 'undefined') {
-    bindOrientation();
-  } else {
-    showStaticQiblah();
+function onAsmaSearch(q) {
+  document.getElementById('asmaClear').classList.toggle('visible', q.length > 0);
+  const s = q.trim().toLowerCase();
+  if (!s) { asmaFiltered = [...ASMA]; }
+  else {
+    asmaFiltered = ASMA.filter(a =>
+      a.tr.toLowerCase().includes(s) ||
+      a.en.toLowerCase().includes(s) ||
+      a.desc.toLowerCase().includes(s) ||
+      String(a.n) === s
+    );
   }
+  renderAsmaGrid(asmaFiltered);
 }
 
-function onOrientation(e) {
-  // iOS: webkitCompassHeading is already magnetic north (0–360, clockwise)
-  // Android absolute: alpha is counter-clockwise from arbitrary zero; negate to get heading
-  if (e.webkitCompassHeading != null) {
-    rawHeading = e.webkitCompassHeading;
-  } else if (e.alpha != null) {
-    rawHeading = (360 - e.alpha) % 360;
-  }
+function clearAsmaSearch() {
+  const inp = document.getElementById('asmaInput');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('asmaClear').classList.remove('visible');
+  asmaFiltered = [...ASMA];
+  renderAsmaGrid(asmaFiltered);
 }
 
-function bindOrientation() {
-  if (orientationBound) return;
-  orientationBound = true;
-  qiblahActive     = true;
-
-  // Prefer deviceorientationabsolute (Android — returns true-north alpha)
-  const eventName = 'ondeviceorientationabsolute' in window
-    ? 'deviceorientationabsolute'
-    : 'deviceorientation';
-  window.addEventListener(eventName, onOrientation, true);
-
-  // Render loop decoupled from sensor rate
-  function renderLoop() {
-    if (!qiblahActive) return;
-    if (rawHeading !== null) {
-      // Seed smoother on first reading
-      if (smoothedHeading === null) smoothedHeading = rawHeading;
-      smoothedHeading = circularLerp(smoothedHeading, rawHeading, SMOOTH);
-      const angle = (qiblahBearing - smoothedHeading + 360) % 360;
-      document.getElementById('qiblahNeedle').style.transform = `rotate(${angle}deg)`;
-    }
-    rafId = requestAnimationFrame(renderLoop);
-  }
-  rafId = requestAnimationFrame(renderLoop);
-
-  setQiblahStatus('Point your phone toward the Ka\'bah ✦');
-  document.getElementById('qiblahCalib').style.display = '';
+function openAsmaDetail(n) {
+  const a = ASMA[n - 1];
+  document.getElementById('detailNum').textContent    = String(n).padStart(2,'0') + ' of 99';
+  document.getElementById('detailArabic').textContent  = a.ar;
+  document.getElementById('detailTranslit').textContent = a.tr;
+  document.getElementById('detailMeaning').textContent  = a.en;
+  document.getElementById('detailRef').textContent     = a.desc + ' — ' + a.ref;
+  document.getElementById('asmaOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
-function showStaticQiblah() {
-  document.getElementById('qiblahNeedle').style.transform = `rotate(${qiblahBearing}deg)`;
-  setQiblahStatus('Live compass unavailable. Needle shows Qiblah direction from North.');
+function closeAsmaDetail() {
+  document.getElementById('asmaOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
-
-function stopCompass() {
-  qiblahActive     = false;
-  orientationBound = false;
-  rawHeading       = null;
-  smoothedHeading  = null;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  window.removeEventListener('deviceorientationabsolute', onOrientation, true);
-  window.removeEventListener('deviceorientation',         onOrientation, true);
-}
-
-// Wrap goTab to pause/resume compass when switching tabs
-const _goTabBase = goTab;
-goTab = function(id) {
-  if (id !== 'qiblah' && qiblahActive)                  stopCompass();
-  if (id === 'qiblah' && qiblahBearing !== null && !qiblahActive) bindOrientation();
-  _goTabBase(id);
-};
 
 draw();
 renderAdhkarLists();
+renderAsmaGrid(ASMA);
 updateCentering();
 wl();
 </script>

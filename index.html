@@ -1626,30 +1626,39 @@ function escHtml(s) {
 // ═══════════════════════════════════════════════════
 //  QIBLAH
 // ═══════════════════════════════════════════════════
-const KAABA = { lat: 21.4225, lng: 39.8262 }; // Ka'bah coordinates
+const KAABA = { lat: 21.4225, lng: 39.8262 };
 
-let qiblahBearing   = null; // degrees from north to Mecca from user's location
-let qiblahActive    = false;
+let qiblahBearing    = null;
+let qiblahActive     = false;
 let orientationBound = false;
+let smoothedHeading  = null;  // low-pass filtered heading
+let rawHeading       = null;  // latest raw sensor value
+let rafId            = null;  // rAF handle
+const SMOOTH         = 0.12;  // 0.05 = very smooth/slow · 0.2 = snappier
 
-// Great-circle bearing from (lat1,lng1) to (lat2,lng2), returns 0-360
+// Great-circle bearing, returns 0–360
 function calcBearing(lat1, lng1, lat2, lng2) {
-  const toRad = d => d * Math.PI / 180;
-  const toDeg = r => r * 180 / Math.PI;
-  const dLng = toRad(lng2 - lng1);
-  const φ1 = toRad(lat1), φ2 = toRad(lat2);
-  const y = Math.sin(dLng) * Math.cos(φ2);
-  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(dLng);
-  return (toDeg(Math.atan2(y, x)) + 360) % 360;
+  const R = Math.PI / 180;
+  const dL = (lng2 - lng1) * R, φ1 = lat1 * R, φ2 = lat2 * R;
+  const y  = Math.sin(dL) * Math.cos(φ2);
+  const x  = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(dL);
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
 }
 
 // Haversine distance in km
 function calcDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371;
-  const toRad = d => d * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const R = 6371, r = Math.PI / 180;
+  const dLat = (lat2 - lat1) * r, dLng = (lng2 - lng1) * r;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Interpolate on the shortest arc — prevents needle spinning through 360° on wrap
+function circularLerp(current, target, f) {
+  let d = target - current;
+  if (d > 180) d -= 360;
+  if (d < -180) d += 360;
+  return (current + d * f + 360) % 360;
 }
 
 function setQiblahStatus(msg) {
@@ -1670,45 +1679,37 @@ function startQiblah() {
     pos => {
       const { latitude: lat, longitude: lng } = pos.coords;
       qiblahBearing = calcBearing(lat, lng, KAABA.lat, KAABA.lng);
-      const dist = calcDistance(lat, lng, KAABA.lat, KAABA.lng);
+      const dist    = calcDistance(lat, lng, KAABA.lat, KAABA.lng);
 
-      // Show bearing + distance
       document.getElementById('qiblahInfo').style.display = 'flex';
       document.getElementById('qiblahBearingText').textContent = Math.round(qiblahBearing) + '°';
       document.getElementById('qiblahDistanceText').textContent =
-        dist > 1000
+        dist >= 1000
           ? (dist / 1000).toFixed(1) + ',000 km from the Ka\'bah'
           : Math.round(dist) + ' km from the Ka\'bah';
 
-      // Kick off compass
       requestCompass();
     },
     err => {
       const msgs = {
-        1: 'Location permission denied. Please allow access in your browser settings.',
+        1: 'Location permission denied. Allow access in your browser settings.',
         2: 'Location unavailable. Try again in a moment.',
         3: 'Location request timed out. Please try again.',
       };
       setQiblahStatus(msgs[err.code] || 'Could not get your location.');
       document.getElementById('qiblahStartBtn').style.display = '';
-      document.getElementById('qiblahStartBtn').textContent = 'Try Again';
+      document.getElementById('qiblahStartBtn').textContent   = 'Try Again';
     },
     { timeout: 10000, maximumAge: 60000, enableHighAccuracy: false }
   );
 }
 
 function requestCompass() {
-  // iOS 13+ requires permission for DeviceOrientationEvent
   if (typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission === 'function') {
+    // iOS 13+ — must be called in a user-gesture context
     DeviceOrientationEvent.requestPermission()
-      .then(state => {
-        if (state === 'granted') {
-          bindOrientation();
-        } else {
-          showStaticQiblah();
-        }
-      })
+      .then(s => s === 'granted' ? bindOrientation() : showStaticQiblah())
       .catch(() => showStaticQiblah());
   } else if (typeof DeviceOrientationEvent !== 'undefined') {
     bindOrientation();
@@ -1717,61 +1718,66 @@ function requestCompass() {
   }
 }
 
+function onOrientation(e) {
+  // iOS: webkitCompassHeading is already magnetic north (0–360, clockwise)
+  // Android absolute: alpha is counter-clockwise from arbitrary zero; negate to get heading
+  if (e.webkitCompassHeading != null) {
+    rawHeading = e.webkitCompassHeading;
+  } else if (e.alpha != null) {
+    rawHeading = (360 - e.alpha) % 360;
+  }
+}
+
 function bindOrientation() {
   if (orientationBound) return;
   orientationBound = true;
-  qiblahActive = true;
-  window.addEventListener('deviceorientationabsolute', onOrientation, true);
-  window.addEventListener('deviceorientation', onOrientation, true);
-  setQiblahStatus('Point your phone toward the Ka\'bah. ✦');
+  qiblahActive     = true;
+
+  // Prefer deviceorientationabsolute (Android — returns true-north alpha)
+  const eventName = 'ondeviceorientationabsolute' in window
+    ? 'deviceorientationabsolute'
+    : 'deviceorientation';
+  window.addEventListener(eventName, onOrientation, true);
+
+  // Render loop decoupled from sensor rate
+  function renderLoop() {
+    if (!qiblahActive) return;
+    if (rawHeading !== null) {
+      // Seed smoother on first reading
+      if (smoothedHeading === null) smoothedHeading = rawHeading;
+      smoothedHeading = circularLerp(smoothedHeading, rawHeading, SMOOTH);
+      const angle = (qiblahBearing - smoothedHeading + 360) % 360;
+      document.getElementById('qiblahNeedle').style.transform = `rotate(${angle}deg)`;
+    }
+    rafId = requestAnimationFrame(renderLoop);
+  }
+  rafId = requestAnimationFrame(renderLoop);
+
+  setQiblahStatus('Point your phone toward the Ka\'bah ✦');
   document.getElementById('qiblahCalib').style.display = '';
 }
 
-function onOrientation(e) {
-  if (qiblahBearing === null) return;
-
-  let heading;
-  // iOS
-  if (e.webkitCompassHeading != null) {
-    heading = e.webkitCompassHeading;
-  }
-  // Android absolute
-  else if (e.absolute && e.alpha != null) {
-    heading = (360 - e.alpha) % 360;
-  }
-  // Android non-absolute fallback
-  else if (e.alpha != null) {
-    heading = (360 - e.alpha) % 360;
-  } else {
-    return;
-  }
-
-  const needleAngle = (qiblahBearing - heading + 360) % 360;
-  document.getElementById('qiblahNeedle').style.transform = `rotate(${needleAngle}deg)`;
-  document.getElementById('qiblahBearingText').textContent = Math.round(qiblahBearing) + '°';
-}
-
 function showStaticQiblah() {
-  // No compass available — show bearing angle only, needle points north statically
   document.getElementById('qiblahNeedle').style.transform = `rotate(${qiblahBearing}deg)`;
-  setQiblahStatus(
-    'Live compass not available on this device. The needle shows the Qiblah direction from North.'
-  );
+  setQiblahStatus('Live compass unavailable. Needle shows Qiblah direction from North.');
 }
 
-// Qiblah-aware tab switching — pauses compass when off-tab, resumes when back
-const _goTabOriginal = goTab;
+function stopCompass() {
+  qiblahActive     = false;
+  orientationBound = false;
+  rawHeading       = null;
+  smoothedHeading  = null;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  window.removeEventListener('deviceorientationabsolute', onOrientation, true);
+  window.removeEventListener('deviceorientation',         onOrientation, true);
+}
+
+// Wrap goTab to pause/resume compass when switching tabs
+const _goTabBase = goTab;
 goTab = function(id) {
-  if (id !== 'qiblah' && qiblahActive) {
-    window.removeEventListener('deviceorientationabsolute', onOrientation, true);
-    window.removeEventListener('deviceorientation', onOrientation, true);
-    qiblahActive = false;
-    orientationBound = false;
-  }
-  if (id === 'qiblah' && qiblahBearing !== null && !qiblahActive) {
-    bindOrientation();
-  }
-  _goTabOriginal(id);
+  if (id !== 'qiblah' && qiblahActive)                  stopCompass();
+  if (id === 'qiblah' && qiblahBearing !== null && !qiblahActive) bindOrientation();
+  _goTabBase(id);
 };
 
 draw();
